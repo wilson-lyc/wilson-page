@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from "react"
-import { motion, useMotionValueEvent, useReducedMotion, useScroll } from "motion/react"
+import {
+  motion,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+} from "motion/react"
 import {
   ArrowUpRightIcon,
   FolderIcon,
   MenuIcon,
   MoonIcon,
-  SparklesIcon,
   SunIcon,
   XIcon,
 } from "lucide-react"
@@ -20,6 +24,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { usePreferences } from "@/hooks/use-preferences"
 import { messages } from "@/lib/i18n"
+import { Home } from "@/components/home/Home"
 import { cn } from "@/lib/utils"
 
 type Page = "home" | "projects"
@@ -45,6 +50,8 @@ export function App() {
         location.hash !== ""
       )
         return
+      window.scrollTo({ top: 0, behavior: "instant" })
+      document.getElementById("main-content")?.focus({ preventScroll: true })
       setPage(currentPage())
       setMenuOpen(false)
     }
@@ -112,7 +119,15 @@ export function App() {
 
   return (
     <div className="site-shell">
-      <a className="skip-link" href="#main-content">
+      <a
+        className="skip-link"
+        href="#main-content"
+        onClick={(event) => {
+          event.preventDefault()
+          document.getElementById("main-content")?.focus()
+          window.scrollTo(0, 0)
+        }}
+      >
         {t.skip}
       </a>
       <header
@@ -162,38 +177,40 @@ export function App() {
           </div>
         </div>
       </header>
-      <main id="main-content" tabIndex={-1} className="content-shell">
-        <div className="section-heading">
-          <div className="flex flex-col gap-3">
-            <p className="section-eyebrow">{t.section}</p>
-            <h1>
-              {t[page]}
-              <span className="heading-period">.</span>
-            </h1>
-          </div>
-          <span className="section-index" aria-hidden="true">
-            {page === "home" ? "01" : "02"} / 02
-          </span>
-        </div>
-        <section className="content-canvas" aria-label={t[page]}>
-          <Empty>
-            <EmptyHeader>
-              <EmptyMedia variant="icon">
-                {page === "home" ? (
-                  <SparklesIcon aria-hidden="true" />
-                ) : (
-                  <FolderIcon aria-hidden="true" />
-                )}
-              </EmptyMedia>
-              <EmptyTitle>
-                {page === "home" ? t.emptyTitle : t.projectsTitle}
-              </EmptyTitle>
-              <EmptyDescription>
-                {page === "home" ? t.emptyDescription : t.projectsDescription}
-              </EmptyDescription>
-            </EmptyHeader>
-          </Empty>
-        </section>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className={page === "home" ? "home-shell" : "content-shell"}
+      >
+        {page === "home" ? (
+          <Home locale={locale} />
+        ) : (
+          <>
+            <div className="section-heading">
+              <div className="flex flex-col gap-3">
+                <p className="section-eyebrow">{t.section}</p>
+                <h1>
+                  {t[page]}
+                  <span className="heading-period">.</span>
+                </h1>
+              </div>
+              <span className="section-index" aria-hidden="true">
+                02 / 02
+              </span>
+            </div>
+            <section className="content-canvas" aria-label={t[page]}>
+              <Empty>
+                <EmptyHeader>
+                  <EmptyMedia variant="icon">
+                    <FolderIcon aria-hidden="true" />
+                  </EmptyMedia>
+                  <EmptyTitle>{t.projectsTitle}</EmptyTitle>
+                  <EmptyDescription>{t.projectsDescription}</EmptyDescription>
+                </EmptyHeader>
+              </Empty>
+            </section>
+          </>
+        )}
       </main>
     </div>
   )
