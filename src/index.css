@@ -150,6 +150,8 @@
 }
 @layer components {
   .site-shell { min-height: 100svh; }
+  .site-footer-music a:hover { text-decoration: underline; }
+  .site-footer-music { margin-top: 12px; font-size: 11px; color: var(--muted-foreground); }
   .site-footer { position: relative; border-top: 1px solid var(--border); padding: 64px max(24px, calc((100vw - 1160px) / 2)) 24px; background: radial-gradient(ellipse at 30% 100%, color-mix(in srgb, var(--module-face) 65%, transparent), transparent 70%); }
   .site-footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 48px; min-height: 140px; }
   .site-footer-signature strong { font-size: clamp(28px, 4vw, 44px); font-weight: 550; letter-spacing: -.05em; }

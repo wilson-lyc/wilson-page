@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react"
 import music from "@/assets/audio/simplicity.mp3"
+import { Toaster, toast } from "@/components/ui/toast"
 
 const MusicContext = createContext<{ muted: boolean; volume: number; setVolume: (volume: number) => void; start: () => void; toggle: () => void } | null>(null)
 
@@ -18,7 +19,14 @@ export function BackgroundMusic({ children }: { children: ReactNode }) {
     audio.muted = false
     setMuted(false)
     // Call play directly in the Start click to preserve browser user activation.
-    void audio.play().catch(() => {
+    void audio.play().then(() => {
+      if (request !== requestId.current || audio.muted || audio.volume === 0) return
+      toast.add({
+        id: "music-attribution",
+        title: "♫ Simplicity — Scott Buckley",
+        description: <><a href="https://www.scottbuckley.com.au/library/simplicity/" target="_blank" rel="noreferrer">www.scottbuckley.com.au</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a></>,
+      })
+    }).catch(() => {
       if (request === requestId.current) {
         audio.muted = true
         setMuted(true)
@@ -60,10 +68,12 @@ export function BackgroundMusic({ children }: { children: ReactNode }) {
   }, [])
 
   return (
+    <Toaster limit={1}>
     <MusicContext.Provider value={{ muted, volume, setVolume, start, toggle }}>
       <audio ref={audioRef} src={music} preload="auto" loop aria-hidden="true" />
       {children}
     </MusicContext.Provider>
+    </Toaster>
   )
 }
 

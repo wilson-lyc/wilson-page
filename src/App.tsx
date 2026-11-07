@@ -326,6 +326,7 @@ function Site() {
               <span>粤ICP备00000000号</span>
             </div>
           </div>
+          <p className="site-footer-music">Music: <a href="https://www.scottbuckley.com.au/library/simplicity/" target="_blank" rel="noreferrer">Simplicity — Scott Buckley</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a></p>
         </footer>
       )}
     </div>
