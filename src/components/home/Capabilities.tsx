@@ -139,6 +139,23 @@ const modelEvaluationAbility = {
     en: "Select evaluation metrics for classification or regression tasks and compare models on held-out data. Use confusion matrices and error analysis to identify issues, examining generalization and performance across classes.",
   },
 }
+const quantizationAbility = {
+  zh: "模型量化与压缩", en: "Model quantization & compression",
+  tags: ["PyTorch", "PTQ", "INT8", "INT4"],
+  description: {
+    zh: "正在学习模型量化与压缩，探索低精度表示如何降低模型存储与显存开销。关注压缩前后的精度变化，以及模型效果、推理速度和资源占用之间的权衡。",
+    en: "Learning model quantization and compression, exploring how lower-precision representations reduce model storage and GPU memory requirements. Focus on accuracy changes and trade-offs between model quality, inference speed, and resource usage.",
+  },
+}
+const operatorOptimizationAbility = {
+  zh: "推理算子优化", en: "Inference operator optimization",
+  tags: ["PyTorch", "CUDA", "Triton", "Profiling", "Kernel Fusion"],
+  description: {
+    zh: "正在学习推理算子的实现与性能分析，从计算和访存开销理解性能瓶颈。探索并行计算、内存访问与算子融合等优化思路，并在保证数值正确性的前提下比较执行效率。",
+    en: "Learning inference operator implementation and profiling to understand compute and memory bottlenecks. Explore parallel computation, memory access, and kernel fusion, comparing execution efficiency while checking numerical correctness.",
+  },
+}
+const infraAbilities = [quantizationAbility, operatorOptimizationAbility]
 const skillDescriptionsEnabled = false
 
 const backendTechnologyGroups = [
@@ -163,6 +180,9 @@ function LearningTechnology({ technology, locale }: { technology: string; locale
 }
 
 function AbilityTechnologies({ ability, locale }: { ability: (typeof softwareAbilities)[number]; locale: Locale }) {
+  if (infraAbilities.includes(ability)) {
+    return <div className="skill-popover-tags">{ability.tags.map(technology => <LearningTechnology key={technology} technology={technology} locale={locale} />)}</div>
+  }
   if (ability === softwareAbilities[1]) {
     const platforms = [
       { zh: "网页", en: "Web", technology: "Vue" },
@@ -233,7 +253,7 @@ function AbilityTechnologies({ ability, locale }: { ability: (typeof softwareAbi
 }
 
 function SkillTag({ tag, capability, locale }: { tag: string; capability: (typeof capabilities)[number]; locale: Locale }) {
-  const ability = [...softwareAbilities, dataMiningAbility, dataCleaningAbility, dataVisualizationAbility, modelDesignAbility, modelTrainingAbility, modelEvaluationAbility].find(item => item[locale] === tag)
+  const ability = [...softwareAbilities, dataMiningAbility, dataCleaningAbility, dataVisualizationAbility, modelDesignAbility, modelTrainingAbility, modelEvaluationAbility, ...infraAbilities].find(item => item[locale] === tag)
   if (!ability && !skillDescriptionsEnabled) return <span className="skill-leaf skill-leaf-static">{tag}</span>
   const copy = capability[locale]
   return (

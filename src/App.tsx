@@ -29,6 +29,8 @@ import { messages } from "@/lib/i18n"
 import { Home } from "@/components/home/Home"
 import { BackgroundMusic, useBackgroundMusic } from "@/components/BackgroundMusic"
 import { cn } from "@/lib/utils"
+import publicSecurityIcon from "@/assets/images/ba.png"
+import { siteSlogan } from "@/content/home"
 
 type Page = "home" | "projects"
 const currentPage = (): Page =>
@@ -173,6 +175,9 @@ function Site() {
           </div>
         </div>
       </div>
+      <div className="flex h-4" aria-hidden="true">
+        <Separator orientation="vertical" />
+      </div>
       <Button
         variant="ghost"
         size={mobile ? "default" : "sm"}
@@ -306,6 +311,23 @@ function Site() {
           </>
         )}
       </main>
+      {entered && (
+        <footer className="site-footer">
+          <div className="site-footer-inner">
+            <div className="site-footer-signature">
+              <strong>Yongchao Lai<span aria-hidden="true">.</span></strong>
+              <p>{siteSlogan[locale]}</p>
+            </div>
+          </div>
+          <div className="site-footer-bottom">
+            <span>© {new Date().getFullYear()} Yongchao Lai</span>
+            <div className="site-footer-records" aria-label={locale === "zh" ? "网站备案信息（示例）" : "Website registration (demo)"}>
+              <span className="site-footer-security-record"><img src={publicSecurityIcon} alt="" width={20} height={22} />粤公网安备 00000000000000 号</span>
+              <span>粤ICP备00000000号</span>
+            </div>
+          </div>
+        </footer>
+      )}
     </div>
   )
 }

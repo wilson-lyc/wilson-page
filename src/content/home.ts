@@ -1,3 +1,8 @@
+export const siteSlogan = {
+  zh: "心怀好奇，笃学不倦。",
+  en: "Stay curious, keep learning.",
+} as const
+
 export const homeCopy = {
   en: {
     role: "Software engineer · Full-stack developer",

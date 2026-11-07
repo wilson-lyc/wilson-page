@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react"
 import { ArrowDown, ArrowUpRight, Pause, Play } from "lucide-react"
 import { useReducedMotion } from "motion/react"
 import type { Locale } from "@/lib/i18n"
-import { githubProfile } from "@/content/home"
+import { githubProfile, siteSlogan } from "@/content/home"
 import welcomeGif from "@/assets/images/hero/welcome.gif"
 import gdufsLogo from "@/assets/images/hero/gdufs-logo-c.png"
 import gdufsLogoDark from "@/assets/images/hero/gdufs-logo-w.png"
@@ -16,14 +16,14 @@ const slides = {
     ["Studying Data Science at the University of Macau", ""],
     ["My research interest: backend service", ""],
     ["End-to-end thinking", "From idea to real system"],
-    ["Stay curious · Keep learning", ""],
+    [siteSlogan.en, ""],
   ],
   zh: [
     ["Hi, I'm", "Yongchao Lai", "Welcome to my page"],
     ["正于澳门大学攻读硕士学位", ""],
     ["研究兴趣：后端服务", "从应用后端到模型服务，探索系统如何更高效地运行"],
     ["端到端思考", "从想法，到真正可用的系统"],
-    ["心怀好奇，笃学不倦", ""],
+    [siteSlogan.zh, ""],
   ],
 } as const
 
@@ -115,15 +115,15 @@ export function Hero({ locale, started, onStart }: { locale: Locale; started: bo
         <h1 id="hero-heading" className="sr-only">{slides[locale][0].join(" ")}</h1>
         <p className="sr-only">{zh ? slides.zh[1][0] : slides.en[1][0]}</p>
         <p className="sr-only">{zh ? "研究兴趣：后端服务。从应用后端到模型服务，探索系统如何更高效地运行。从业务需求出发，设计系统架构与服务接口，探索微服务的拆分、协作与可靠运行。将关注点延伸至 AI 模型服务，探索大语言模型推理优化，以及响应延迟、吞吐量与资源利用率之间的平衡。" : "My research interest is backend services: from backend architecture and microservices development to high-performance AI model serving and LLM inference optimization."}</p>
-        <p className="sr-only">{zh ? "心怀好奇，笃学不倦。端到端思考。从想法，到真正可用的系统。精选作品：作品 A、作品 B 和作品 C 均为演示占位内容。" : "Stay curious. Keep learning. End-to-end thinking. From idea to real system. Selected work: Work A, Work B, and Work C are demo placeholders."}</p>
+        <p className="sr-only">{siteSlogan[locale]} {zh ? "端到端思考。从想法，到真正可用的系统。精选作品：作品 A、作品 B 和作品 C 均为演示占位内容。" : "End-to-end thinking. From idea to real system. Selected work: Work A, Work B, and Work C are demo placeholders."}</p>
         <div className="hero-slides" aria-hidden="true">
           <div className="hero-slide" data-education={active === 1} data-welcome={active === 0} data-research={active === 2} data-work={active === 3} data-closing={active === 4}
             style={{ opacity: 1 - leaving, transform: `translateY(${-12 * leaving}px)`, filter: `blur(${8 * leaving}px)` }}>
             <div className="hero-slide-copy">
             {active === 4 ? (
               <div className="hero-finale-message">
-                <p className="hero-headline" style={fadeStyle(250)}>{zh ? "心怀好奇" : "Stay curious"}</p>
-                <p className="hero-headline hero-finale-accent" style={fadeStyle(450)}>{zh ? "笃学不倦" : "Keep learning"}</p>
+                <p className="hero-headline" style={fadeStyle(250)}>{siteSlogan[locale].split(/[，,]/)[0]}</p>
+                <p className="hero-headline hero-finale-accent" style={fadeStyle(450)}>{siteSlogan[locale].split(/[，,]/)[1].trim()}</p>
               </div>
             ) : slides[locale][active].map((line, lineIndex) => line && (
               <p className={lineIndex === 0 || (active === 0 && lineIndex === 1) ? "hero-headline hero-line" : "hero-subtitle"} key={line}
