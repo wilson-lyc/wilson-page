@@ -16,6 +16,8 @@ const badgeVariants = cva(
         default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
         secondary:
           "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80",
+        architecture:
+          "rounded-md bg-background text-secondary-foreground",
         learning:
           "border-dashed border-muted-foreground/50 bg-secondary text-secondary-foreground",
         destructive:
