@@ -3,7 +3,6 @@ import { Popover } from "@base-ui/react/popover"
 import { Tooltip } from "@base-ui/react/tooltip"
 import { Badge } from "@/components/ui/badge"
 import { Braces, Cpu, Network } from "lucide-react"
-import { motion, useReducedMotion } from "motion/react"
 import tigerGif from "@/assets/images/hero/tiger.gif"
 import type { Locale } from "@/lib/i18n"
 
@@ -293,7 +292,6 @@ function SkillTag({ tag, capability, locale }: { tag: string; capability: (typeo
 
 export function Capabilities({ locale }: { locale: Locale }) {
   const zh = locale === "zh"
-  const reducedMotion = useReducedMotion()
   return (
     <section className="capabilities" aria-labelledby="capabilities-heading">
       <header className="capabilities-intro">
@@ -315,28 +313,26 @@ export function Capabilities({ locale }: { locale: Locale }) {
       </div>
       <p className="skill-tree-hint">{zh ? "左右滑动探索技能树" : "Swipe to explore the skill tree"}</p>
       <div className="skill-tree-scroll" tabIndex={0} role="region" aria-label={zh ? "交互技能树，可横向滚动" : "Interactive skill tree, horizontally scrollable"}>
-        <motion.div className="skill-tree" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
+        <div className="skill-tree">
           <svg className="skill-connections" viewBox="0 0 1160 940" aria-hidden="true">
             {branches.map((branch, index) => {
               const x = branchX(index)
               const tags = branchRows(branch, locale)
               return <g key={branch.id}>
-                <motion.path className="skill-path" d={`M 580 154 C 580 210 ${x} 230 ${x} 320`}
-                  variants={{ hidden: { pathLength: 0, opacity: 0 }, visible: { pathLength: 1, opacity: 1 } }}
-                  transition={{ delay: reducedMotion ? 0 : 0.35, duration: reducedMotion ? 0 : 0.65 }} />
+                <path className="skill-path"
+                  d={`M 580 154 C 580 210 ${x} 230 ${x} 320`} />
                 {tags.map((tag, leafIndex) => {
                   const y = 386 + leafIndex * 42
-                  return <motion.path key={tag.id} className="skill-path" d={`M ${x} 350 H ${x - 155} V ${y} H ${x - 130}`}
-                    variants={{ hidden: { pathLength: 0, opacity: 0 }, visible: { pathLength: 1, opacity: 1 } }}
-                    transition={{ delay: reducedMotion ? 0 : 1.1 + leafIndex * 0.09, duration: reducedMotion ? 0 : 0.35 }} />
+                  return <path className="skill-path" key={tag.id}
+                    d={`M ${x} 350 H ${x - 155} V ${y} H ${x - 130}`} />
                 })}
               </g>
             })}
           </svg>
-          <motion.div className="skill-core" variants={{ hidden: { opacity: 0, scale: 0.85 }, visible: { opacity: 1, scale: 1 } }} transition={{ duration: reducedMotion ? 0 : 0.35 }}>
+          <div className="skill-core">
             <img src={tigerGif} alt={zh ? "小老虎" : "Tiger"} />
             <strong>Me</strong>
-          </motion.div>
+          </div>
           {branches.map((branch, index) => {
             const Icon = branch.icon
             const title = branch[locale]
@@ -344,26 +340,22 @@ export function Capabilities({ locale }: { locale: Locale }) {
             return (
               <div className="skill-branch" key={branch.id}
                 style={{ left: branchX(index) } as CSSProperties}>
-                <motion.div className="skill-branch-heading"
-                  variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} transition={{ delay: reducedMotion ? 0 : 0.9, duration: reducedMotion ? 0 : 0.3 }}
-                  >
+                <div className="skill-branch-heading">
                   <span className="skill-branch-icon"><Icon size={20} aria-hidden="true" /></span>
                   <span>{title}</span>
                   {branch.id === "infra" && <small className="skill-learning">{zh ? "学习中" : "Learning"}</small>}
-                </motion.div>
+                </div>
                 <ul className="skill-leaves">
                   {tags.map(({ id, tag, capability, heading, learning }, leafIndex) => (
-                    <motion.li key={id} style={{ top: 78 + leafIndex * 42 }}
-                      variants={{ hidden: { opacity: 0, x: -8 }, visible: { opacity: 1, x: 0 } }}
-                      transition={{ delay: reducedMotion ? 0 : 1.4 + leafIndex * 0.09, duration: reducedMotion ? 0 : 0.3 }}>
+                    <li key={id} style={{ top: 78 + leafIndex * 42 }}>
                       {heading ? <span className="skill-leaf skill-subheading">{tag}</span> : <><SkillTag tag={tag} capability={capability} locale={locale} />{learning && <small className="skill-leaf-learning">{zh ? "学习中" : "Learning"}</small>}</>}
-                    </motion.li>
+                    </li>
                   ))}
                 </ul>
               </div>
             )
           })}
-        </motion.div>
+        </div>
       </div>
     </section>
   )
