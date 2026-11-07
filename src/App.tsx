@@ -11,6 +11,8 @@ import {
   MenuIcon,
   MoonIcon,
   SunIcon,
+  Volume2Icon,
+  VolumeXIcon,
   XIcon,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -25,7 +27,7 @@ import { Separator } from "@/components/ui/separator"
 import { usePreferences } from "@/hooks/use-preferences"
 import { messages } from "@/lib/i18n"
 import { Home } from "@/components/home/Home"
-import { BackgroundMusic, useBackgroundMusic } from "@/components/home/BackgroundMusic"
+import { BackgroundMusic, useBackgroundMusic } from "@/components/BackgroundMusic"
 import { cn } from "@/lib/utils"
 
 type Page = "home" | "projects"
@@ -41,7 +43,7 @@ function Site() {
       return false
     }
   })
-  const { start: startMusic } = useBackgroundMusic()
+  const { muted, volume, setVolume, start: startMusic, toggle: toggleMusic } = useBackgroundMusic()
   const { locale, theme, setLocale, setTheme } = usePreferences()
   const t = messages[locale]
   const [page, setPage] = useState<Page>(currentPage)
@@ -139,6 +141,38 @@ function Site() {
 
   const preferences = (mobile = false) => (
     <div className="flex items-center gap-2">
+      <div className="music-control">
+        <Button
+          variant="ghost"
+          size={mobile ? "icon-lg" : "icon"}
+          aria-label={muted ? t.enableMusic : t.muteMusic}
+          title={muted ? t.enableMusic : t.muteMusic}
+          aria-pressed={!muted}
+          onClick={toggleMusic}
+        >
+          {muted ? (
+            <VolumeXIcon aria-hidden="true" />
+          ) : (
+            <Volume2Icon aria-hidden="true" />
+          )}
+        </Button>
+        <div className="music-volume-reveal">
+          <div className="music-volume-inner">
+            <input
+              type="range"
+              min={0}
+              max={100}
+              step={1}
+              value={muted ? 0 : Math.round(volume * 100)}
+              onChange={(event) => setVolume(Number(event.target.value) / 100)}
+              aria-label={t.musicVolume}
+              aria-valuetext={`${muted ? 0 : Math.round(volume * 100)}%`}
+              title={`${t.musicVolume}: ${muted ? 0 : Math.round(volume * 100)}%`}
+              className="music-volume"
+            />
+          </div>
+        </div>
+      </div>
       <Button
         variant="ghost"
         size={mobile ? "default" : "sm"}

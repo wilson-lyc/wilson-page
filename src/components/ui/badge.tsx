@@ -9,12 +9,15 @@ const badgeVariants = cva(
     variants: {
       size: {
         default: "",
+        compact: "h-auto min-h-7 px-2.5 py-1 text-sm leading-5",
         comfortable: "h-auto min-h-9 max-w-full shrink px-3 py-1.5 text-base leading-6 whitespace-normal text-left font-normal",
       },
       variant: {
         default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
         secondary:
           "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80",
+        learning:
+          "border-dashed border-muted-foreground/50 bg-secondary text-secondary-foreground",
         destructive:
           "bg-destructive/10 text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20",
         outline:

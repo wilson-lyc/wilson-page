@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react"
-import { ArrowDown, ArrowUpRight, Pause, Play, Volume2, VolumeX } from "lucide-react"
+import { ArrowDown, ArrowUpRight, Pause, Play } from "lucide-react"
 import { useReducedMotion } from "motion/react"
 import type { Locale } from "@/lib/i18n"
 import { githubProfile } from "@/content/home"
@@ -9,7 +9,6 @@ import gdufsLogoDark from "@/assets/images/hero/gdufs-logo-w.png"
 import umLogo from "@/assets/images/hero/um-logo-c.png"
 import umLogoDark from "@/assets/images/hero/um-logo-w.png"
 import { Button } from "@/components/ui/button"
-import { useBackgroundMusic } from "./BackgroundMusic"
 
 const slides = {
   en: [
@@ -49,7 +48,6 @@ export function Hero({ locale, started, onStart }: { locale: Locale; started: bo
   const [paused, setPaused] = useState(false)
   const [dragging, setDragging] = useState(false)
   const [elapsed, setElapsed] = useState(0)
-  const { muted, toggle: toggleMusic } = useBackgroundMusic()
   const playhead = useRef(0)
   const zh = locale === "zh"
   const playing = started && !paused && !dragging && !reducedMotion
@@ -110,11 +108,6 @@ export function Hero({ locale, started, onStart }: { locale: Locale; started: bo
         aria-label={paused || reducedMotion ? (zh ? "播放 Hero" : "Play Hero") : (zh ? "暂停 Hero" : "Pause Hero")}
         disabled={!started || !!reducedMotion}>
         {paused || reducedMotion ? <Play size={15} strokeWidth={1.5} aria-hidden="true" /> : <Pause size={15} strokeWidth={1.5} aria-hidden="true" />}
-      </button>
-      <button className="hero-play-toggle hero-sound-toggle" type="button" disabled={!started}
-        aria-label={muted ? (zh ? "开启背景音乐" : "Enable background music") : (zh ? "关闭背景音乐" : "Mute background music")}
-        aria-pressed={!muted} onClick={toggleMusic}>
-        {muted ? <VolumeX size={15} strokeWidth={1.5} aria-hidden="true" /> : <Volume2 size={15} strokeWidth={1.5} aria-hidden="true" />}
       </button>
       <div className="hero-light" aria-hidden="true"><i /><i /><i /></div>
       {active === 4 && <div className="hero-finale-backdrop" aria-hidden="true" style={{ opacity: reveal(0, 700) * (1 - leaving) }}><i /></div>}

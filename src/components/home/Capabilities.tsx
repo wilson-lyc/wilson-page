@@ -1,5 +1,10 @@
-import { useState, type CSSProperties } from "react"
-import { Braces, Code2, Container, Cpu, Network, Sparkles } from "lucide-react"
+import { type CSSProperties } from "react"
+import { Popover } from "@base-ui/react/popover"
+import { Tooltip } from "@base-ui/react/tooltip"
+import { Badge } from "@/components/ui/badge"
+import { Braces, Cpu, Network } from "lucide-react"
+import { motion, useReducedMotion } from "motion/react"
+import tigerGif from "@/assets/images/hero/tiger.gif"
 import type { Locale } from "@/lib/i18n"
 
 const capabilities = [
@@ -30,75 +35,219 @@ const capabilities = [
   },
 ] as const
 
-const branchPositions = [
-  { x: 210, y: 270 },
-  { x: 580, y: 125 },
-  { x: 950, y: 270 },
-  { x: 860, y: 655 },
-  { x: 300, y: 655 },
+const branches = [
+  { id: "software", zh: "软件工程", en: "Software Engineering", icon: Braces, groups: [
+    { zh: "", en: "", capability: capabilities[0], tags: [
+      ["后端开发", "Backend development"], ["数据存储", "Data storage"],
+    ] },
+    { zh: "", en: "", capability: capabilities[1], tags: [["前端开发", "Frontend development"]] },
+    { zh: "", en: "", capability: capabilities[2], tags: [["部署与交付", "Deployment & delivery"]] },
+  ] },
+  { id: "data", zh: "数据科学", en: "Data Science", icon: Network, groups: [
+    { zh: "", en: "", capability: capabilities[4], tags: [
+      ["数据挖掘", "Data mining"], ["数据清洗与管理", "Data cleaning & management"],
+      ["神经网络设计", "Neural network design"], ["神经网络搭建", "Neural network implementation"],
+      ["神经网络训练", "Neural network training"], ["神经网络评估", "Neural network evaluation"],
+    ] },
+  ] },
+  { id: "infra", zh: "AI Infra", en: "AI Infrastructure", icon: Cpu, groups: [
+    { zh: "", en: "", capability: capabilities[3], tags: [
+      ["模型量化与压缩", "Model quantization & compression"], ["推理算子优化", "Inference operator optimization"],
+    ] },
+  ] },
 ]
-const branchIcons = [Braces, Code2, Container, Cpu, Network]
+const branchX = (index: number) => 190 + index * 390
+function branchRows(branch: (typeof branches)[number], locale: Locale) {
+  return branch.groups.flatMap(group => [
+    ...(group[locale] ? [{ tag: group[locale], capability: group.capability, heading: true, learning: false }] : []),
+    ...group.tags.map(tag => ({ tag: tag[locale === "zh" ? 0 : 1], capability: group.capability, heading: false, learning: branch.id === "infra" })),
+  ])
+}
+const softwareAbilities = [
+  {
+    zh: "后端开发", en: "Backend development", tags: ["Java", "Spring Boot / Cloud", "RESTful API", "WebSocket", "SSE", "MyBatis-Plus", "Sa-Token", "OpenFeign", "Spring Cloud Gateway", "Nacos", "Sentinel", "Swagger", "Apifox", "Postman"],
+    description: {
+      zh: "能够围绕业务需求设计与实现后端服务，合理划分职责与服务边界。关注系统的健壮性、数据一致性与可维护性，在异常和并发场景下保障服务的可靠运行。",
+      en: "Design and implement backend services around business needs, with clear responsibilities and service boundaries. Focus on robustness, data consistency, and maintainability to keep services reliable under failures and concurrent workloads.",
+    },
+  },
+  {
+    zh: "前端开发", en: "Frontend development", tags: ["Vue", "uni-app"],
+    description: {
+      zh: "能够实现业务页面、对接后端接口，使用 Vue 开发 Web 界面，使用 uni-app 开发小程序。",
+      en: "Build business interfaces and connect backend APIs, using Vue for web interfaces and uni-app for mini-apps.",
+    },
+  },
+  {
+    zh: "数据存储", en: "Data storage", tags: ["SQL", "NoSQL", "MySQL", "Redis"],
+    description: {
+      zh: "能够围绕业务需求设计数据表、编写查询，使用 MySQL 存储业务数据，并结合 Redis 处理缓存与会话。",
+      en: "Design tables and write queries for business requirements, using MySQL for application data and Redis for caching and sessions.",
+    },
+  },
+  {
+    zh: "部署与交付", en: "Deployment & delivery", tags: ["Docker", "Git"],
+    description: {
+      zh: "能够使用 Git 管理代码版本，用 Docker 打包和部署应用，将开发完成的功能运行起来。",
+      en: "Manage code versions with Git and package and deploy applications with Docker to bring completed features into use.",
+    },
+  },
+]
+const skillDescriptionsEnabled = false
+
+const backendTechnologyGroups = [
+  { zh: "基础", en: "Core", tags: ["Java", "Go", "Node.js", "Spring Boot / Cloud"] },
+  { zh: "接口通信", en: "APIs", tags: ["RESTful API", "WebSocket", "SSE"] },
+  { zh: "数据与鉴权", en: "Data & Auth", tags: ["MyBatis-Plus", "Sa-Token"] },
+  { zh: "微服务", en: "Services", tags: ["OpenFeign", "Spring Cloud Gateway", "Nacos", "Sentinel"] },
+  { zh: "接口文档与调试", en: "API documentation & testing", tags: ["Swagger", "Apifox", "Postman"] },
+]
+
+function AbilityTechnologies({ ability, locale }: { ability: (typeof softwareAbilities)[number]; locale: Locale }) {
+  if (ability !== softwareAbilities[0]) {
+    return <div className="skill-popover-tags">{ability.tags.map(technology => <Badge key={technology} variant="secondary" size="compact">{technology}</Badge>)}</div>
+  }
+  return (
+    <dl className="skill-tech-groups">
+      {backendTechnologyGroups.map(group => (
+        <div key={group.en}>
+          <dt>{group[locale]}</dt>
+          <dd className="skill-popover-tags">{group.tags.map(technology => {
+            const learning = technology === "Go" || technology === "Node.js"
+            const tip = locale === "zh" ? "努力学习中" : "Actively learning"
+            if (!learning) return <Badge key={technology} variant="secondary" size="compact">{technology}</Badge>
+            return <Tooltip.Provider key={technology} delay={0}>
+              <Tooltip.Root>
+                <Tooltip.Trigger delay={0} render={<Badge variant="learning" size="compact" tabIndex={0} />}>
+                  {technology}
+                </Tooltip.Trigger>
+                <Tooltip.Portal>
+                  <Tooltip.Positioner side="top" sideOffset={6}>
+                    <Tooltip.Popup className="skill-learning-tip">{tip}</Tooltip.Popup>
+                  </Tooltip.Positioner>
+                </Tooltip.Portal>
+              </Tooltip.Root>
+            </Tooltip.Provider>
+          })}</dd>
+        </div>
+      ))}
+    </dl>
+  )
+}
+
+function SkillTag({ tag, capability, locale }: { tag: string; capability: (typeof capabilities)[number]; locale: Locale }) {
+  const ability = softwareAbilities.find(item => item[locale] === tag)
+  if (!ability && !skillDescriptionsEnabled) return <span className="skill-leaf skill-leaf-static">{tag}</span>
+  const copy = capability[locale]
+  return (
+    <Popover.Root>
+      <Popover.Trigger className="skill-leaf" openOnHover delay={150} closeDelay={0}
+        onClick={event => {
+          if (window.matchMedia("(min-width: 768px) and (hover: hover)").matches) {
+            event.preventBaseUIHandler()
+          }
+        }}>{tag}</Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Positioner side="right" align="start" sideOffset={8} collisionPadding={16}>
+          <Popover.Popup className="skill-popover" initialFocus={false}>
+            <Popover.Title className="skill-popover-title">{tag}</Popover.Title>
+            {ability ? (
+              <>
+                <Popover.Description>{ability.description[locale]}</Popover.Description>
+                <AbilityTechnologies ability={ability} locale={locale} />
+              </>
+            ) : tag === "Java" ? (
+              <Popover.Description>{locale === "zh"
+                ? "我从本科的面向对象编程课程开始接触和学习 Java。了解 Java 中的 HashMap、Set 等常用集合。"
+                : "I started learning Java in an undergraduate object-oriented programming course. I’m familiar with common Java collections such as HashMap and Set."}</Popover.Description>
+            ) : (
+              <>
+                <p className="skill-popover-label">{copy.title} · {copy.label}</p>
+                <Popover.Description>{copy.intro}</Popover.Description>
+                <ul>{copy.details.map(detail => <li key={detail}>{detail}</li>)}</ul>
+              </>
+            )}
+          </Popover.Popup>
+        </Popover.Positioner>
+      </Popover.Portal>
+    </Popover.Root>
+  )
+}
 
 export function Capabilities({ locale }: { locale: Locale }) {
   const zh = locale === "zh"
-  const [selected, setSelected] = useState("backend")
-  const [selectedSkill, setSelectedSkill] = useState<string | null>(null)
-  const active = capabilities.find(capability => capability.id === selected) ?? capabilities[0]
-  const copy = active[locale]
+  const reducedMotion = useReducedMotion()
   return (
     <section className="capabilities" aria-labelledby="capabilities-heading">
       <header className="capabilities-intro">
-        <h2 id="capabilities-heading">{zh ? "我能做什么" : "What I can do"}</h2>
-        <p>{zh ? "以我为起点，探索不断生长的技能树 · 点击分支或技能点了解更多" : "An evolving skill tree · Select a branch or skill to explore"}</p>
+        <h2 id="capabilities-heading">{zh ? "技能" : "Skills"}</h2>
       </header>
+      <div className="skill-mobile-tags">
+        {branches.map(branch => (
+          <div className="skill-tag-group" key={branch.id}>
+            <h3>{branch[locale]}{branch.id === "infra" && <small className="skill-learning">{zh ? "学习中" : "Learning"}</small>}</h3>
+            <ul>
+              {branchRows(branch, locale).map(row => (
+                <li key={row.tag} className={row.heading ? "skill-tag-subheading" : undefined}>
+                  {row.heading ? <h4>{row.tag}</h4> : <SkillTag tag={row.tag} capability={row.capability} locale={locale} />}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
       <p className="skill-tree-hint">{zh ? "左右滑动探索技能树" : "Swipe to explore the skill tree"}</p>
       <div className="skill-tree-scroll" tabIndex={0} role="region" aria-label={zh ? "交互技能树，可横向滚动" : "Interactive skill tree, horizontally scrollable"}>
-        <div className="skill-tree">
-          <svg className="skill-connections" viewBox="0 0 1160 850" aria-hidden="true">
-            <circle className="skill-orbit" cx="580" cy="420" r="140" />
-            <circle className="skill-orbit" cx="580" cy="420" r="275" />
-            {branchPositions.map((position, index) => (
-              <g key={capabilities[index].id} data-active={selected === capabilities[index].id}>
-                <path className="skill-path" d={`M 580 420 Q ${position.x} 420 ${position.x} ${position.y}`} />
-                <circle className="skill-signal" r="3">
-                  <animateMotion dur={`${4 + index * 0.5}s`} repeatCount="indefinite" path={`M 580 420 Q ${position.x} 420 ${position.x} ${position.y}`} />
-                </circle>
+        <motion.div className="skill-tree" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
+          <svg className="skill-connections" viewBox="0 0 1160 940" aria-hidden="true">
+            {branches.map((branch, index) => {
+              const x = branchX(index)
+              const tags = branchRows(branch, locale)
+              return <g key={branch.id}>
+                <motion.path className="skill-path" d={`M 580 154 C 580 210 ${x} 230 ${x} 320`}
+                  variants={{ hidden: { pathLength: 0, opacity: 0 }, visible: { pathLength: 1, opacity: 1 } }}
+                  transition={{ delay: reducedMotion ? 0 : 0.35, duration: reducedMotion ? 0 : 0.65 }} />
+                {tags.map((tag, leafIndex) => {
+                  const y = 386 + leafIndex * 42
+                  return <motion.path key={tag.tag} className="skill-path" d={`M ${x} 350 H ${x - 155} V ${y} H ${x - 130}`}
+                    variants={{ hidden: { pathLength: 0, opacity: 0 }, visible: { pathLength: 1, opacity: 1 } }}
+                    transition={{ delay: reducedMotion ? 0 : 1.1 + leafIndex * 0.09, duration: reducedMotion ? 0 : 0.35 }} />
+                })}
               </g>
-            ))}
+            })}
           </svg>
-          <div className="skill-core">
-            <span className="skill-core-symbol"><Sparkles size={28} aria-hidden="true" /></span>
-            <strong>Yongchao Lai</strong>
-            <span>{zh ? "后端开发 · 持续探索" : "Backend developer · Always exploring"}</span>
-          </div>
-          {capabilities.map((capability, index) => {
-            const Icon = branchIcons[index]
-            const t = capability[locale]
+          <motion.div className="skill-core" variants={{ hidden: { opacity: 0, scale: 0.85 }, visible: { opacity: 1, scale: 1 } }} transition={{ duration: reducedMotion ? 0 : 0.35 }}>
+            <img src={tigerGif} alt={zh ? "小老虎" : "Tiger"} />
+            <strong>Me</strong>
+          </motion.div>
+          {branches.map((branch, index) => {
+            const Icon = branch.icon
+            const title = branch[locale]
+            const tags = branchRows(branch, locale)
             return (
-              <div className="skill-branch" data-active={selected === capability.id} key={capability.id}
-                style={{ left: branchPositions[index].x, top: branchPositions[index].y, "--float-delay": `${-index * 1.3}s` } as CSSProperties}>
-                <button className="skill-branch-heading" type="button" aria-pressed={selected === capability.id}
-                  onClick={() => { setSelected(capability.id); setSelectedSkill(null) }} aria-controls="skill-detail">
+              <div className="skill-branch" key={branch.id}
+                style={{ left: branchX(index) } as CSSProperties}>
+                <motion.div className="skill-branch-heading"
+                  variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} transition={{ delay: reducedMotion ? 0 : 0.9, duration: reducedMotion ? 0 : 0.3 }}
+                  >
                   <span className="skill-branch-icon"><Icon size={20} aria-hidden="true" /></span>
-                  <span>{t.title}</span>
-                </button>
-                <div className="skill-twigs" aria-hidden="true"><i /><i /><i /></div>
+                  <span>{title}</span>
+                  {branch.id === "infra" && <small className="skill-learning">{zh ? "学习中" : "Learning"}</small>}
+                </motion.div>
                 <ul className="skill-leaves">
-                  {capability.tags.map(tag => (
-                    <li key={tag}><button type="button" className="skill-leaf" data-selected={selected === capability.id && selectedSkill === tag}
-                      aria-pressed={selected === capability.id && selectedSkill === tag} aria-controls="skill-detail"
-                      onClick={() => { setSelected(capability.id); setSelectedSkill(tag) }}><span aria-hidden="true" />{tag}</button></li>
+                  {tags.map(({ tag, capability, heading, learning }, leafIndex) => (
+                    <motion.li key={tag} style={{ top: 78 + leafIndex * 42 }}
+                      variants={{ hidden: { opacity: 0, x: -8 }, visible: { opacity: 1, x: 0 } }}
+                      transition={{ delay: reducedMotion ? 0 : 1.4 + leafIndex * 0.09, duration: reducedMotion ? 0 : 0.3 }}>
+                      {heading ? <span className="skill-leaf skill-subheading">{tag}</span> : <><SkillTag tag={tag} capability={capability} locale={locale} />{learning && <small className="skill-leaf-learning">{zh ? "学习中" : "Learning"}</small>}</>}
+                    </motion.li>
                   ))}
                 </ul>
               </div>
             )
           })}
-        </div>
+        </motion.div>
       </div>
-      <article className="skill-detail" id="skill-detail" aria-live="polite" aria-atomic="true">
-        <header><p>{copy.label}{selectedSkill ? ` / ${selectedSkill}` : ""}</p><h3>{copy.title}</h3></header>
-        <div><p>{copy.intro}</p><ul>{copy.details.map(detail => <li key={detail}>{detail}</li>)}</ul></div>
-      </article>
     </section>
   )
 }
