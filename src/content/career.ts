@@ -1,0 +1,23 @@
+// Public career content distilled from docs/cv.md. Reference contacts stay private.
+export const career = [
+  {
+    id: "gdufs", dates: "2021.09 — 2025.06", kind: "education",
+    zh: { place: "广东外语外贸大学", role: "软件工程 · 本科", chapter: "从软件工程出发", department: "信息科学与技术学院", facts: ["GPA 3.84 / 4.0", "专业排名 11 / 149"], details: ["系统学习面向对象程序设计、数据结构、计算机系统组成、操作系统、软件工程、计算机网络与数据库系统原理。", "通过 Web 开发、云计算与大数据、软件质量保证与测试、移动软件开发等课程，建立从系统基础到应用开发的知识体系。", "德贤茶庄线上点餐系统获评本科优秀毕业设计；连续两学年获得综合二等奖学金。"] },
+    en: { place: "Guangdong University of Foreign Studies", role: "Software Engineering · Undergraduate", chapter: "A foundation in software engineering", department: "School of Information Science and Technology", facts: ["GPA 3.84 / 4.0", "Rank 11 / 149"], details: ["Studied object-oriented programming, data structures, computer architecture, operating systems, software engineering, networks, and databases.", "Built practical foundations through web development, cloud computing, software testing, and mobile development courses.", "DexTea received an outstanding undergraduate graduation project award. Awarded second-class comprehensive scholarships in two academic years."] },
+  },
+  {
+    id: "yy", dates: "2024.12.16 — 2025.03.17", kind: "work",
+    zh: { place: "YY 直播 · 广州方硅", role: "软件测试实习生", chapter: "在真实产品中理解质量", department: "广州方硅信息技术有限公司", facts: ["需求评审", "功能与接口测试", "交付验收"], details: ["参与需求评审，识别逻辑矛盾与功能遗漏，明确验收标准、影响范围与测试边界；采用三级分层策略设计测试用例，并组织产品与研发开展评审。", "参与络希、YY 语音 App、YY PC、Yo 语音 App 等项目测试，使用 TestLink、Apifox、Charles 与 Jira 完成用例执行、接口调用、抓包和缺陷跟踪。", "协同研发与产品定位问题、推动修复与回归验证；现场演示功能、核验需求覆盖度，推进产品验收与版本上线。"] },
+    en: { place: "YY Live · Guangzhou Fanggui", role: "Software Testing Intern", chapter: "Learning quality through real products", department: "Guangzhou Fanggui Information Technology Co., Ltd.", facts: ["Requirements review", "Functional & API testing", "Release acceptance"], details: ["Reviewed requirements for missing functionality and logical gaps, defined acceptance criteria and testing boundaries, and designed layered test cases with product and engineering teams.", "Tested Luoxi, YY Voice, YY PC, and Yo Voice using TestLink, Apifox, Charles, and Jira for test execution, API requests, network inspection, and defect tracking.", "Worked with developers on diagnosis, fixes, and regression tests, and demonstrated features during product acceptance to support releases."] },
+  },
+  {
+    id: "um", dates: "2025.08 — 2027.07", kind: "education",
+    zh: { place: "澳门大学", role: "数据科学（人工智能应用）", chapter: "向人工智能深入", department: "人工智能与脑科学研究院", facts: ["GPA 3.92 / 4.0", "预计 2027.07 完成学业"], details: ["在数据科学与人工智能应用方向继续学习，探索机器学习方法与实际系统之间的连接。", "深度学习导论、数据科学编程、数据库与数据挖掘、人工智能原理、机器学习实践、物联网数据分析均获 A；自然语言处理与应用、数据可视化获 A-。"] },
+    en: { place: "University of Macau", role: "Data Science · Artificial Intelligence Applications", chapter: "Going deeper into artificial intelligence", department: "Institute of Artificial Intelligence and Brain Science", facts: ["GPA 3.92 / 4.0", "Expected completion: Jul 2027"], details: ["Continuing my studies in data science and AI applications, exploring the connection between machine learning methods and practical systems.", "A grades in Introduction to Deep Learning, Data Science Programming, Database and Data Mining, Principles of AI, Machine Learning Practice, and IoT Data Analysis. A- in NLP and Applications and Data Visualization."] },
+  },
+  {
+    id: "ici", dates: "2026.01 — 2026.07", kind: "work", href: "https://ici.um.edu.mo",
+    zh: { place: "澳门大学创新创业中心", role: "IT Helper", chapter: "独立交付，连接更多人", department: "网站开发与维护", facts: ["从 0 到 1", "中英双语", "响应式开发"], details: ["独立完成协同创新研究院官网从 0 到 1 的开发：对接指导教师与设计人员、梳理需求，协同学校 IT 部门制定迁移方案，交付适配多端的中英文双语页面。", "主导「大健康+加速器」官网响应式改版，重点优化移动端浏览体验。", "维护部门主管网站，发布新闻与活动预告，完成 2026 年「中银杯」极创客创业大赛等专题页面的设计、开发与部署。"] },
+    en: { place: "UM Centre for Innovation and Entrepreneurship", role: "IT Helper", chapter: "Delivering independently, connecting people", department: "Website development & maintenance", facts: ["Built from scratch", "Bilingual", "Responsive development"], details: ["Independently built the Institute of Collaborative Innovation website from scratch, aligning requirements with faculty and designers, planning migration with university IT, and delivering responsive Chinese and English pages.", "Led a responsive redesign of the Big Health+ Accelerator website, focusing on mobile usability.", "Maintained departmental websites, published news and event announcements, and designed, developed, and deployed event pages including the 2026 BOC One Million Dollar Entrepreneurship Competition."] },
+  },
+] as const

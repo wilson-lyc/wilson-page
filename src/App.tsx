@@ -37,6 +37,7 @@ export function App() {
   const [page, setPage] = useState<Page>(currentPage)
   const [menuOpen, setMenuOpen] = useState(false)
   const menuButton = useRef<HTMLButtonElement>(null)
+  const headerRef = useRef<HTMLElement>(null)
   const [scrolled, setScrolled] = useState(() => window.scrollY > 0)
   const { scrollY } = useScroll()
   const reducedMotion = useReducedMotion()
@@ -64,6 +65,24 @@ export function App() {
     return () => {
       window.removeEventListener("hashchange", onHashChange)
       desktop.removeEventListener("change", onResize)
+    }
+  }, [])
+
+  useEffect(() => {
+    const header = headerRef.current
+    if (!header) return
+    const updateHeight = () => {
+      document.documentElement.style.setProperty(
+        "--site-header-height",
+        `${header.getBoundingClientRect().height}px`,
+      )
+    }
+    updateHeight()
+    const observer = new ResizeObserver(updateHeight)
+    observer.observe(header)
+    return () => {
+      observer.disconnect()
+      document.documentElement.style.removeProperty("--site-header-height")
     }
   }, [])
 
@@ -131,6 +150,7 @@ export function App() {
         {t.skip}
       </a>
       <header
+        ref={headerRef}
         className="site-header"
         onKeyDown={(event) => {
           if (event.key === "Escape" && menuOpen) {

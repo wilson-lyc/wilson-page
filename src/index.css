@@ -1,13 +1,19 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+    --text-xs: var(--font-size-xs);
+    --text-sm: var(--font-size-sm);
+    --text-base: var(--font-size-body);
+    --text-lg: var(--font-size-lead);
+    --text-xl: var(--font-size-title);
+    --text-2xl: var(--font-size-section);
+    --text-3xl: var(--font-size-display);
     --font-heading: var(--font-sans);
-    --font-sans: 'Geist Variable', sans-serif;
+    --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,6 +55,17 @@
 }
 
 :root {
+    /* Five global steps: two below body, two above. Values assume a 16px root. */
+    --font-size-xs: 0.75rem;    /* 12px: minor metadata */
+    --font-size-sm: 0.875rem;   /* 14px: supporting copy */
+    --font-size-md: 1rem;      /* 16px: body, the middle step */
+    --font-size-lg: 1.75rem;   /* 28px: headings */
+    --font-size-xl: 3.5rem;    /* 56px: Hero display */
+    --font-size-body: var(--font-size-md);
+    --font-size-lead: var(--font-size-md);
+    --font-size-title: var(--font-size-lg);
+    --font-size-section: var(--font-size-lg);
+    --font-size-display: var(--font-size-xl);
     /* Global palette: edit these tokens to theme all semantic components. */
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
@@ -124,6 +141,8 @@
     }
   body {
     @apply bg-background text-foreground;
+    font-size: var(--font-size-body);
+    line-height: 1.7;
     }
   html {
     @apply font-sans;
@@ -135,16 +154,16 @@
   .header-surface { position: absolute; inset: 0; z-index: -1; pointer-events: none; border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--background) 82%, transparent); backdrop-filter: blur(12px); }
   .header-inner { min-height: 56px; margin-inline: auto; padding: 4px 24px; display: flex; align-items: center; gap: 28px; }
   .desktop-navigation { margin-right: auto; }
-  .nav-link { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; border-radius: 6px; color: var(--muted-foreground); font-size: 14px; line-height: 20px; transition: background 150ms, color 150ms; }
+  .nav-link { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; border-radius: 6px; color: var(--muted-foreground); font-size: var(--font-size-body); line-height: 20px; transition: background 150ms, color 150ms; }
   .nav-link:hover { color: var(--accent-foreground); background: var(--accent); }
   .mobile-menu-button { display: none; }
   .mobile-menu { display: none; }
   .content-shell { margin-inline: auto; padding: 10px; outline: none; }
   .section-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 32px; }
-  .section-eyebrow { color: var(--muted-foreground); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; }
-  .section-heading h1 { font-size: clamp(32px, 4vw, 48px); font-weight: 500; line-height: 1.15; letter-spacing: -0.055em; }
+  .section-eyebrow { color: var(--muted-foreground); font-size: var(--font-size-body); letter-spacing: 0.16em; text-transform: uppercase; }
+  .section-heading h1 { font-size: var(--font-size-display); font-weight: 500; line-height: 1.15; letter-spacing: -0.055em; }
   .heading-period { color: var(--primary); }
-  .section-index { color: var(--muted-foreground); font-size: 11px; font-variant-numeric: tabular-nums; letter-spacing: 0.1em; padding-bottom: 6px; }
+  .section-index { color: var(--muted-foreground); font-size: var(--font-size-xs); font-variant-numeric: tabular-nums; letter-spacing: 0.1em; padding-bottom: 6px; }
   .content-canvas { display: flex; min-height: max(360px, calc(100svh - 340px)); border: 1px dashed var(--border); border-radius: 16px; background: color-mix(in oklch, var(--muted) 18%, var(--background)); }
   .skip-link { position: fixed; top: 8px; left: 8px; transform: translateY(-160%); padding: 10px 16px; border-radius: 8px; background: var(--foreground); color: var(--background); }
   .skip-link:focus { transform: translateY(0); }
@@ -157,7 +176,7 @@
     .nav-link-mobile { min-height: 40px; padding: 8px 10px; }
     .content-shell { padding: 10px; }
     .section-heading { margin-bottom: 24px; }
-    .section-eyebrow { font-size: 10px; }
+    .section-eyebrow { font-size: var(--font-size-body); }
     .content-canvas { min-height: max(360px, calc(100svh - 270px)); border-radius: 12px; }
   }
   @media (prefers-reduced-motion: reduce) {
