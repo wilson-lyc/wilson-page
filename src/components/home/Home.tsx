@@ -16,12 +16,12 @@ import "./home.css"
 
 const icons = [Workflow, Layers, Terminal]
 
-export function Home({ locale }: { locale: Locale }) {
+export function Home({ locale, started, onStart }: { locale: Locale; started: boolean; onStart: () => void }) {
   const t = homeCopy[locale]
   return (
     <>
-      <Hero locale="en" />
-      <div className="portfolio">
+      <Hero locale={locale} started={started} onStart={onStart} />
+      <div className="portfolio" hidden={!started}>
       <section className="story-section">
         <p className="kicker">{t.capabilities}</p>
         <h2 id="capability-heading" tabIndex={-1}>

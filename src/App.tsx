@@ -25,13 +25,23 @@ import { Separator } from "@/components/ui/separator"
 import { usePreferences } from "@/hooks/use-preferences"
 import { messages } from "@/lib/i18n"
 import { Home } from "@/components/home/Home"
+import { BackgroundMusic, useBackgroundMusic } from "@/components/home/BackgroundMusic"
 import { cn } from "@/lib/utils"
 
 type Page = "home" | "projects"
 const currentPage = (): Page =>
   location.hash === "#/projects" ? "projects" : "home"
+const entrySessionKey = "wilson-page:started"
 
-export function App() {
+function Site() {
+  const [entered, setEntered] = useState(() => {
+    try {
+      return sessionStorage.getItem(entrySessionKey) === "true"
+    } catch {
+      return false
+    }
+  })
+  const { start: startMusic } = useBackgroundMusic()
   const { locale, theme, setLocale, setTheme } = usePreferences()
   const t = messages[locale]
   const [page, setPage] = useState<Page>(currentPage)
@@ -84,7 +94,28 @@ export function App() {
       observer.disconnect()
       document.documentElement.style.removeProperty("--site-header-height")
     }
-  }, [])
+  }, [entered])
+
+  useEffect(() => {
+    if (entered) {
+      window.scrollTo({ top: 0, behavior: "instant" })
+      document.getElementById("main-content")?.focus({ preventScroll: true })
+    }
+  }, [entered])
+
+  useEffect(() => {
+    if (entered) return
+    const root = document.documentElement
+    const previousOverflow = root.style.overflow
+    const previousBodyOverflow = document.body.style.overflow
+    root.style.overflow = "hidden"
+    document.body.style.overflow = "hidden"
+    window.scrollTo({ top: 0, behavior: "instant" })
+    return () => {
+      root.style.overflow = previousOverflow
+      document.body.style.overflow = previousBodyOverflow
+    }
+  }, [entered])
 
   const navigation = (mobile = false) => (
     <nav
@@ -137,9 +168,9 @@ export function App() {
   )
 
   return (
-    <div className="site-shell">
+    <div className="site-shell" data-started={entered}>
       <a
-        className="skip-link"
+        className="skip-link" inert={!entered}
         href="#main-content"
         onClick={(event) => {
           event.preventDefault()
@@ -151,6 +182,7 @@ export function App() {
       </a>
       <header
         ref={headerRef}
+        inert={!entered}
         className="site-header"
         onKeyDown={(event) => {
           if (event.key === "Escape" && menuOpen) {
@@ -202,8 +234,16 @@ export function App() {
         tabIndex={-1}
         className={page === "home" ? "home-shell" : "content-shell"}
       >
-        {page === "home" ? (
-          <Home locale={locale} />
+        {!entered || page === "home" ? (
+          <Home locale={locale} started={entered} onStart={() => {
+            startMusic()
+            try {
+              sessionStorage.setItem(entrySessionKey, "true")
+            } catch {
+              // The entry still works when browser storage is unavailable.
+            }
+            setEntered(true)
+          }} />
         ) : (
           <>
             <div className="section-heading">
@@ -234,6 +274,10 @@ export function App() {
       </main>
     </div>
   )
+}
+
+export function App() {
+  return <BackgroundMusic><Site /></BackgroundMusic>
 }
 
 export default App

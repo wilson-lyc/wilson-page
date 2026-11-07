@@ -222,6 +222,7 @@
 .hero-play-toggle:hover { color: var(--foreground); background: var(--accent); }
 .hero-play-toggle:focus-visible { outline: 2px solid var(--module-ink); outline-offset: 4px; }
 .hero-play-toggle:disabled { opacity: .5; cursor: default; }
+.hero-sound-toggle { right: calc(clamp(16px, 3vw, 40px) + 42px); }
 
 .hero-highlight { position: relative; display: inline-block; color: var(--module-ink); font-weight: 600; }
 .hero-education-content { padding-bottom: 4px; }
@@ -241,6 +242,9 @@
 
 .hero-school-logo { display: flex; align-items: center; width: min(100%, 340px); height: 96px; margin-top: 16px; }
 .hero-school-logo img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: left center; }
+.hero-school-logo .hero-school-logo-dark { display: none; }
+.dark .hero-school-logo .hero-school-logo-light { display: none; }
+.dark .hero-school-logo .hero-school-logo-dark { display: block; }
 @media (max-width: 767px) {
   .hero-school-logo { height: 64px; margin-top: 12px; }
 }
@@ -311,3 +315,24 @@
 .hero-slide[data-closing="true"] .hero-finale-accent { color: var(--module-ink); }
 .hero[data-closing="true"] .hero-contact { margin-top: 36px; }
 .hero[data-closing="true"] .hero-contact .solid-link { background: var(--module-ink); color: var(--background); padding: 14px 24px; box-shadow: 0 8px 28px color-mix(in srgb, var(--module-ink) 14%, transparent); }
+
+/* Keep one Hero mounted while its surrounding controls enter. */
+.site-shell .site-header, .hero-seek, .hero-play-toggle, .hero-scroll {
+  transition: opacity .65s ease, transform .65s cubic-bezier(.22, 1, .36, 1), visibility .65s;
+}
+.site-shell[data-started="false"] .site-header {
+  opacity: 0; visibility: hidden; transform: translateY(-12px); pointer-events: none;
+}
+.hero-player[data-started="false"] :is(.hero-seek, .hero-play-toggle, .hero-scroll) {
+  opacity: 0; visibility: hidden; pointer-events: none;
+}
+.hero-player[data-started="false"] .hero-scroll { transform: translateY(12px); }
+.hero-start { position: absolute; bottom: max(36px, env(safe-area-inset-bottom)); inset-inline: 0; display: flex; justify-content: center; z-index: 2; transition: opacity .3s ease, transform .3s ease, visibility .3s; }
+.hero-player[data-started="true"] .hero-start { opacity: 0; visibility: hidden; transform: translateY(-10px); pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .hero-start > button { animation: hero-start-enter .65s cubic-bezier(.22, 1, .36, 1) .8s both; }
+  @keyframes hero-start-enter {
+    from { opacity: 0; transform: translateY(16px); filter: blur(6px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+}
