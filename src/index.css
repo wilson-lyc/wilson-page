@@ -183,3 +183,16 @@
     *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
   }
 }
+
+/* Smooth corners for rounded interface surfaces; older browsers keep border-radius. */
+@supports (corner-shape: squircle) {
+  *, *::before, *::after { corner-shape: squircle; }
+  /* Circular controls, timeline dots, and atmospheric ellipses stay circular. */
+  .education-marker, .hero-play-toggle, .hero-education-dot,
+  .hero-light i, .hero-work-atmosphere i,
+  .hero-finale-backdrop i, .hero-finale-backdrop::after {
+    corner-shape: round;
+  }
+  .hero-seek::-webkit-slider-thumb { corner-shape: round; }
+  .hero-seek::-moz-range-thumb { corner-shape: round; }
+}
