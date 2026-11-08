@@ -2,6 +2,7 @@
 export const projects = [
   {
     name: "DEXTEA",
+    heroHighlight: { zh: "微服务系统", en: "Microservices system" },
     art: "ordering",
     cover: "/images/projects/dextea.webp",
     github: "https://github.com/wilson-lyc/dextea-v3",
@@ -15,6 +16,7 @@ export const projects = [
   },
   {
     name: "FindMyHouse",
+    heroHighlight: { zh: "AI Agent 系统", en: "AI agent system" },
     art: "map",
     cover: "/images/projects/findmyhouse.webp",
     github: "https://github.com/wilson-lyc/FindMyHouse",
@@ -31,6 +33,7 @@ export const projects = [
   },
   {
     name: "SAQ",
+    heroHighlight: { zh: "AI Infrastructure · 模型量化", en: "Model quantization" },
     art: "tiles",
     cover: "/images/projects/saq.webp",
     github: "https://github.com/wilson-lyc/SAQ",
@@ -47,6 +50,7 @@ export const projects = [
   },
   {
     name: "Scent4You",
+    heroHighlight: { zh: "深度学习模型 · 推荐系统", en: "Model training" },
     art: "scent",
     cover: "/images/projects/scent4you.webp",
     github: "https://github.com/wilson-lyc/Scent4You",

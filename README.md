@@ -1,6 +1,6 @@
 # Wilson Personal Page
 
-纯前端个人主页。目前包含响应式布局、导航与偏好设置，尚无正式内容。
+使用 React、TypeScript 和 Vite 构建的个人主页，支持中英文、日夜主题和响应式布局。
 
 ## 技术栈
 
@@ -17,16 +17,17 @@ npm ci
 npm run dev
 ```
 
-## 验证与构建
+## 部署
+
+参见 [1Panel 手动部署步骤](./DEPLOYMENT.md)。
+
+## 本地验证
 
 ```bash
 npm run typecheck
 npm run lint
 npm run build
-npm run preview
 ```
-
-构建产物位于 `dist/`，可部署到静态托管服务。
 
 ## 项目约定
 
@@ -35,8 +36,8 @@ npm run preview
 - 桌面端横向导航；小于 768px 使用可展开的手机菜单，支持 Escape 关闭。
 - `#/` 与 `#/projects` 为 Home / Projects 路由，支持刷新和浏览器前进后退，适配静态托管。
 - `src/lib/i18n.ts` 管理中英文文案；切换同步页面标题与 HTML lang。
-- `src/hooks/use-preferences.ts` 管理语言与日夜主题，并通过 localStorage 保留偏好。
-- 首次语言跟随浏览器，首次主题跟随系统；index.html 在首屏渲染前设置主题，减少闪烁。
+- `src/hooks/use-preferences.ts` 管理语言与日夜主题，切换仅在当前页面生效，不存储偏好。
+- 每次打开默认英文，主题默认跟随系统；index.html 在首屏渲染前设置主题，减少闪烁。
 - `src/index.css` 保存 Tailwind 与 shadcn 主题变量。
 - `components.json` 保存 shadcn 配置。
 - 基础交互与占位状态使用 shadcn Button、Empty 和 Separator。

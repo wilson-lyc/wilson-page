@@ -30,7 +30,7 @@ import { Home } from "@/components/home/Home"
 import { BackgroundMusic, useBackgroundMusic } from "@/components/BackgroundMusic"
 import { cn } from "@/lib/utils"
 import publicSecurityIcon from "@/assets/images/ba.png"
-import { siteSlogan } from "@/content/home"
+import { githubProfile, siteSlogan } from "@/content/home"
 
 type Page = "home" | "projects"
 const currentPage = (): Page =>
@@ -129,8 +129,10 @@ function Site() {
       {(["home", "projects"] as const).map((item) => (
         <a
           key={item}
-          href={item === "home" ? "#/" : "#/projects"}
-          aria-current={page === item ? "page" : undefined}
+          href={item === "home" ? "#/" : githubProfile}
+          target={item === "projects" ? "_blank" : undefined}
+          rel={item === "projects" ? "noopener noreferrer" : undefined}
+          aria-current={item === "home" && page === "home" ? "page" : undefined}
           onClick={() => setMenuOpen(false)}
           className={cn("nav-link", mobile && "nav-link-mobile")}
         >
@@ -321,12 +323,11 @@ function Site() {
           </div>
           <div className="site-footer-bottom">
             <span>© {new Date().getFullYear()} Yongchao Lai</span>
-            <div className="site-footer-records" aria-label={locale === "zh" ? "网站备案信息（示例）" : "Website registration (demo)"}>
-              <span className="site-footer-security-record"><img src={publicSecurityIcon} alt="" width={20} height={22} />粤公网安备 00000000000000 号</span>
-              <span>粤ICP备00000000号</span>
+            <div className="site-footer-records" aria-label={locale === "zh" ? "网站备案信息" : "Website registration"}>
+              <a className="site-footer-security-record" href="https://beian.mps.gov.cn/#/query/webSearch?code=44020402000374" target="_blank" rel="noopener noreferrer"><img src={publicSecurityIcon} alt="" width={20} height={22} />粤公网安备44020402000374号</a>
+              <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">粤ICP备2023033182号</a>
             </div>
           </div>
-          <p className="site-footer-music">Music: <a href="https://www.scottbuckley.com.au/library/simplicity/" target="_blank" rel="noreferrer">Simplicity — Scott Buckley</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a></p>
         </footer>
       )}
     </div>

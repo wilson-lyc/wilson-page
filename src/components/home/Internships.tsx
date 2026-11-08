@@ -1,5 +1,5 @@
-import { useRef } from "react"
-import { useInView, useReducedMotion } from "motion/react"
+// import { useRef } from "react"
+// import { useInView, useReducedMotion } from "motion/react"
 import type { Locale } from "@/lib/i18n"
 
 const internships = [
@@ -16,13 +16,15 @@ const internships = [
 ] as const
 
 export function Internships({ locale }: { locale: Locale }) {
-  const timeline = useRef<HTMLOListElement>(null)
-  const visible = useInView(timeline, { once: true, amount: 0.25 })
-  const reducedMotion = useReducedMotion()
+  // Animation temporarily disabled; retain the observer setup for restoration.
+  // const timeline = useRef<HTMLOListElement>(null)
+  // const visible = useInView(timeline, { once: true, amount: 0.25 })
+  // const reducedMotion = useReducedMotion()
   return (
     <section className="internships" aria-labelledby="internships-heading">
       <h2 id="internships-heading">{locale === "zh" ? "实习" : "Internships"}</h2>
-      <ol className="internship-list" ref={timeline} data-visible={visible || !!reducedMotion}>
+      {/* Animation props: ref={timeline} data-visible={visible || !!reducedMotion} */}
+      <ol className="internship-list">
         {internships.map(record => {
           const t = record[locale]
           return (

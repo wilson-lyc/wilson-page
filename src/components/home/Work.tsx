@@ -13,8 +13,10 @@ export function Work({ locale }: { locale: Locale }) {
           <article className="work-example" key={project.name}>
             <a
               className="work-card"
-              href="#/projects"
-              aria-label={`${zh ? "查看项目" : "View project"} · ${project.name}`}
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${zh ? "查看 GitHub 仓库" : "View GitHub repository"} · ${project.name}`}
             >
               <div
                 className="work-cover"

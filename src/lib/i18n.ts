@@ -2,7 +2,7 @@ export type Locale = "en" | "zh"
 
 export const messages = {
   en: {
-    siteTitle: "Wilson’s homepage",
+    siteTitle: "Yongchao’s page",
     home: "Home",
     projects: "Projects",
     navigation: "Main navigation",
@@ -23,7 +23,7 @@ export const messages = {
     preferences: "Preferences",
   },
   zh: {
-    siteTitle: "Wilson的主页",
+    siteTitle: "Yongchao 的主页",
     home: "首页",
     projects: "项目",
     navigation: "主导航",

@@ -90,6 +90,7 @@
     --chart-3: oklch(0.439 0 0);
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
+    --footer-background: var(--module-ink);
     --radius: 0.625rem;
     --radius-tag: var(--radius-lg);
     --tag-background: var(--secondary);
@@ -106,6 +107,7 @@
 }
 
 .dark {
+    --footer-background: var(--module-face);
     --background: oklch(0.145 0 0);
     --foreground: oklch(0.985 0 0);
     --card: oklch(0.205 0 0);
@@ -161,14 +163,22 @@
     color: var(--tag-foreground);
   }
   .site-shell { min-height: 100svh; }
-  .site-footer-music a:hover { text-decoration: underline; }
-  .site-footer-music { margin-top: 12px; font-size: 11px; color: var(--muted-foreground); }
-  .site-footer { position: relative; border-top: 1px solid var(--border); padding: 64px max(24px, calc((100vw - 1160px) / 2)) 24px; background: radial-gradient(ellipse at 30% 100%, color-mix(in srgb, var(--module-face) 65%, transparent), transparent 70%); }
+  .site-footer {
+    --foreground: #fff;
+    --muted-foreground: rgb(255 255 255 / .8);
+    --border: rgb(255 255 255 / .22);
+    --ring: #fff;
+    position: relative;
+    padding: 64px max(24px, calc((100vw - 1160px) / 2)) 24px;
+    background: var(--footer-background);
+    color: var(--foreground);
+  }
   .site-footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 48px; min-height: 140px; }
   .site-footer-signature strong { font-size: clamp(28px, 4vw, 44px); font-weight: 550; letter-spacing: -.05em; }
-  .site-footer-signature strong > span { color: var(--module-ink); }
+  .site-footer-signature strong > span { color: inherit; }
   .site-footer-signature p { margin-top: 12px; font-size: 14px; color: var(--muted-foreground); }
   .site-footer-records { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
+  .site-footer-records a:hover { text-decoration: underline; }
   .site-footer-security-record { display: flex; align-items: center; gap: 6px; }
   .site-footer-security-record img { width: 20px; height: 22px; object-fit: contain; flex: none; }
   .site-footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px 32px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted-foreground); }

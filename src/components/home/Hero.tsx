@@ -116,7 +116,7 @@ export function Hero({ locale, started, onStart }: { locale: Locale; started: bo
         <h1 id="hero-heading" className="sr-only">{slides[locale][0].join(" ")}</h1>
         <p className="sr-only">{zh ? slides.zh[1][0] : slides.en[1][0]}</p>
         <p className="sr-only">{zh ? "研究兴趣：后端服务。从应用后端到模型服务，探索系统如何更高效地运行。从业务需求出发，设计系统架构与服务接口，探索微服务的拆分、协作与可靠运行。将关注点延伸至 AI 模型服务，探索大语言模型推理优化，以及响应延迟、吞吐量与资源利用率之间的平衡。" : "My research interest is backend services: from backend architecture and microservices development to high-performance AI model serving and LLM inference optimization."}</p>
-        <p className="sr-only">{siteSlogan[locale]} {zh ? "端到端思考。从想法，到真正可用的系统。精选项目：DEXTEA、FindMyHouse、SAQ 和 Scent4You。" : "End-to-end thinking. From idea to real system. Selected work: DEXTEA, FindMyHouse, SAQ, and Scent4You."}</p>
+        <p className="sr-only">{siteSlogan[locale]} {zh ? "端到端思考。从想法，到真正可用的系统。项目：DEXTEA、FindMyHouse、SAQ 和 Scent4You。" : "End-to-end thinking. From idea to real system. Projects: DEXTEA, FindMyHouse, SAQ, and Scent4You."}</p>
         <div className="hero-slides" aria-hidden="true">
           <div className="hero-slide" data-education={active === 1} data-welcome={active === 0} data-research={active === 2} data-work={active === 3} data-closing={active === 4}
             style={{ opacity: 1 - leaving, transform: `translateY(${-12 * leaving}px)`, filter: `blur(${8 * leaving}px)` }}>
@@ -157,13 +157,15 @@ export function Hero({ locale, started, onStart }: { locale: Locale; started: bo
             {active === 3 && (
               <div className="hero-selected-work">
                 <div className="hero-work-atmosphere" style={{ opacity: reveal(100, 1000) }}><i /><i /></div>
-                <p className="hero-work-label" style={fadeStyle(450)}>{zh ? "精选项目" : "SELECTED WORK"}</p>
                 <div className="hero-work-grid">
                   {projects.map((work, workIndex) => (
                     <article className="hero-work-item" key={work.name} style={fadeStyle(650 + workIndex * 180)}>
+                      <a className="hero-work-link" href={work.github} target="_blank" rel="noopener noreferrer"
+                        aria-label={`${zh ? "查看 GitHub 仓库" : "View GitHub repository"} · ${work.name}`}>
                       <div className="hero-work-preview"><img src={work.cover} alt="" width={400} height={300} loading="lazy" decoding="async" /></div>
                       <h2>{work.name}</h2>
-                      <p>{work[locale][0]}</p>
+                      <p>{work.heroHighlight[locale]}</p>
+                      </a>
                     </article>
                   ))}
                 </div>
