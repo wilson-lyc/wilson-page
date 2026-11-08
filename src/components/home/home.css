@@ -8,13 +8,21 @@
   --module-face: #242b41;
   --module-side: #4b577b;
 }
- .portfolio { width: min(100% - clamp(40px, 10vw, 144px), 1180px); margin-inline: auto; }
+/* One spacing scale owns the gaps between all portfolio chapters. */
+.portfolio {
+  --section-gap: clamp(64px, 8vw, 112px);
+  --section-heading-gap: clamp(32px, 4vw, 48px);
+  width: min(100% - clamp(40px, 10vw, 144px), 1180px);
+  margin-inline: auto;
+  padding-block: var(--section-gap);
+}
+.portfolio:not([hidden]) { display: grid; gap: var(--section-gap); }
+.portfolio > section { min-width: 0; }
 .home-shell { outline: none; }
 .solid-link { display: flex; align-items: center; width: fit-content; gap: 10px; font-size: var(--font-size-body); font-weight: 550; background: var(--primary); color: var(--primary-foreground); padding: 13px 20px; border-radius: 9px; }
 .solid-link:hover { opacity: .85; }
 
-.education { padding-block: clamp(72px, 10vw, 144px); }
-.education > h2, .internships > h2, .work-intro > h2, .capabilities-intro > h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 520; letter-spacing: -.055em; line-height: 1.1; margin-bottom: clamp(48px, 7vw, 88px); scroll-margin-top: 100px; outline: none; }
+.education > h2, .internships > h2, .work-intro > h2, .capabilities-intro > h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 520; letter-spacing: -.055em; line-height: 1.1; margin-bottom: var(--section-heading-gap); scroll-margin-top: 100px; outline: none; }
 .education-timeline { list-style: none; padding: 0; }
 .education-entry { display: grid; grid-template-columns: 200px minmax(0, 1fr); position: relative; padding-left: 32px; gap: clamp(32px, 5vw, 72px); padding-bottom: 80px; }
 .education-entry::before { content: ""; position: absolute; left: 5px; top: 10px; bottom: -10px; width: 1px; background: var(--border); }
@@ -249,7 +257,6 @@
 .rolling-number-reel > span { display: block; flex: none; height: 1.15em; line-height: 1.15; }
 
 
-.internships { padding-bottom: clamp(72px, 10vw, 144px); }
 .internship-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto 1px auto; column-gap: clamp(40px, 6vw, 96px); list-style: none; padding: 0; }
 .internship-list::before { content: ""; grid-column: 1 / -1; grid-row: 2; height: 1px; background: var(--border); }
 .internship-entry { position: relative; min-width: 0; }
@@ -289,17 +296,15 @@
   .internship-list[data-visible="true"] .internship-content { opacity: 1; transform: translateY(0); }
 }
 
-.work { padding-bottom: clamp(72px, 10vw, 144px); }
-.work-intro > h2 { margin-bottom: 16px; }
 .work-intro > p { font-size: var(--font-size-body); color: var(--muted-foreground); }
-.work-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin-top: 28px; }
+.work-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
 .work-example { min-width: 0; }
 .work-card { display: flex; flex-direction: column; height: 100%; border-radius: var(--radius-xl); }
 .work-card:focus-visible { outline: 2px solid var(--module-ink); outline-offset: 6px; }
 .work-cover { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: var(--radius-lg); background: var(--module-face); }
 .work-type { font-size: var(--font-size-xs); color: var(--muted-foreground); margin-top: 14px; }
 .work-example h3 { font-size: 1.25rem; line-height: 1.35; letter-spacing: -.03em; font-weight: 550; margin-top: 4px; }
-.work-description { font-size: var(--font-size-sm); color: var(--muted-foreground); line-height: 1.65; margin-top: 8px; margin-bottom: 14px; }
+.work-description { font-size: var(--font-size-sm); color: var(--muted-foreground); line-height: 1.65; margin-top: 8px; }
 /* Keep the layout fixed while giving pointer and keyboard users the same cue. */
 .work-card { transition: transform 240ms ease; }
 .work-cover { transition: box-shadow 240ms ease; }
@@ -319,33 +324,52 @@
 @media (max-width: 1023px) { .work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 24px; } .work-cover { max-height: 180px; } }
 @media (max-width: 479px) { .work-grid { gap: 24px 16px; } .work-type { line-height: 1.5; } .work-example h3 { font-size: 1rem; } }
 
-.capabilities { padding-bottom: clamp(72px, 10vw, 144px); }
-.capabilities-intro > h2 { margin-bottom: 16px; }
 .skill-mobile-tags { display: none; }
 
-.skill-tree-hint { display: none; font-size: var(--font-size-sm); color: var(--muted-foreground); margin-top: 24px; }
+.skill-tree-hint { display: none; font-size: var(--font-size-sm); color: var(--muted-foreground); margin: 0 0 12px; }
 .skill-tree-scroll {
   overflow-x: auto;
-  margin-top: 32px;
   background: radial-gradient(ellipse at center, color-mix(in srgb, var(--module-face) 70%, transparent), transparent 65%);
 }
 .skill-tree-scroll:focus-visible { outline: 2px solid var(--ring); outline-offset: 4px; }
-.skill-tree { width: 1160px; height: 940px; position: relative; margin-inline: auto; }
+.skill-tree { width: 1160px; position: relative; margin-inline: auto; }
 .skill-connections { position: absolute; inset: 0; width: 100%; height: 100%; }
 .skill-path { fill: none; stroke: var(--border); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+/* Short light trails follow the same geometry as the static connections. */
+.skill-particle { display: none; fill: none; stroke: var(--module-ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .skill-particle {
+    display: block;
+    stroke-dasharray: .035 1;
+    stroke-dashoffset: .04;
+    opacity: 0;
+    filter: drop-shadow(0 0 3px var(--module-side));
+    animation: skill-particle-flow 5s linear infinite;
+    animation-delay: var(--particle-delay, 0s);
+    animation-play-state: paused;
+  }
+  .skill-tree[data-visible="true"] .skill-particle { animation-play-state: running; }
+  @keyframes skill-particle-flow {
+    0% { stroke-dashoffset: .04; opacity: 0; }
+    2% { opacity: .9; }
+    19% { opacity: .9; }
+    22% { stroke-dashoffset: -1; opacity: 0; }
+    100% { stroke-dashoffset: -1; opacity: 0; }
+  }
+}
 .skill-core { position: absolute; left: 480px; top: 20px; width: 200px; text-align: center; }
 .skill-core > img { display: block; width: 200px; height: 150px; object-fit: contain; }
 .skill-core > strong { display: block; margin-top: -40px; font-size: var(--font-size-body); font-weight: 600; }
 .skill-branch { position: absolute; top: 290px; width: 330px; margin-left: -165px; }
-.skill-branch-heading { display: flex; align-items: center; justify-content: center; gap: 10px; width: 330px; min-height: 60px; padding: 12px; border: 1px solid var(--border); border-radius: 14px; background: var(--background); font-size: var(--font-size-body); font-weight: 550; text-align: center; }
+.skill-branch-heading { display: flex; align-items: center; justify-content: center; gap: 10px; width: 330px; min-height: 60px; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-xl); background: var(--background); font-size: var(--font-size-body); font-weight: 550; text-align: center; }
 .skill-branch-icon { color: var(--module-ink); display: flex; flex: none; }
 .skill-leaves { list-style: none; padding: 0; margin: 0; }
 .skill-leaves > li { position: absolute; left: 35px; width: 290px; height: 36px; }
-.skill-leaf { display: flex; align-items: center; width: 100%; height: 36px; padding: 6px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--background); color: var(--muted-foreground); font-size: var(--font-size-body); cursor: pointer; transition: border-color .2s, color .2s, background .2s; }
+.skill-leaf { --tag-background: var(--background); --tag-border: var(--border); display: flex; align-items: center; width: 100%; height: 36px; padding: 6px 12px; font-size: var(--font-size-body); line-height: 1.5; font-weight: 400; cursor: pointer; transition: border-color .2s, color .2s, background .2s; }
 .skill-leaf:hover { border-color: var(--module-ink); color: var(--foreground); }
-.skill-leaf-static, .skill-leaf-static:hover { border-color: var(--border); color: var(--muted-foreground); }
+.skill-leaf-static, .skill-leaf-static:hover { border-color: var(--tag-border); color: var(--tag-foreground); }
 .skill-leaf, .skill-popover-tags > span { cursor: default; user-select: none; -webkit-user-select: none; }
-.skill-leaf[data-popup-open] { border-color: var(--module-ink); color: var(--module-ink); background: var(--module-face); }
+.skill-leaf[data-popup-open] { border-color: var(--module-ink); color: var(--module-ink); background: var(--background); }
 .skill-branch button:focus-visible { outline: 2px solid var(--module-ink); outline-offset: 4px; }
 .skill-popover { width: min(360px, calc(100vw - 32px)); max-height: min(360px, var(--available-height)); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-gutter: stable; padding: 20px; border: 1px solid var(--border); border-radius: var(--radius-xl); background: var(--background); color: var(--foreground); box-shadow: 0 12px 36px color-mix(in srgb, var(--foreground) 12%, transparent); font-size: var(--font-size-sm); line-height: 1.7; }
 .skill-popover-title { font-size: var(--font-size-body); font-weight: 600; }
@@ -354,17 +378,15 @@
 @media (max-width: 1199px) { .skill-tree-hint { display: block; } }
 @media (max-width: 767px) {
   .skill-tree-scroll, .skill-tree-hint { display: none; }
-  .skill-mobile-tags { display: flex; flex-direction: column; gap: 24px; margin-top: 32px; }
+  .skill-mobile-tags { display: flex; flex-direction: column; gap: 24px; }
   .skill-tag-group h3 { font-size: var(--font-size-body); font-weight: 550; margin-bottom: 12px; }
   .skill-tag-group ul { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0; }
   .skill-tag-group .skill-leaf { width: auto; height: auto; min-height: 36px; }
   .skill-tag-group button:focus-visible { outline: 2px solid var(--module-ink); outline-offset: 4px; }
 }
 
-.skill-learning { margin-left: 8px; font-size: 11px; font-weight: 400; color: var(--muted-foreground); white-space: nowrap; }
-.skill-subheading { font-weight: 550; background: var(--module-face); }
-.skill-leaf-learning { position: absolute; right: 8px; top: 10px; font-size: 10px; color: var(--muted-foreground); pointer-events: none; }
-.skill-branch:last-child .skill-leaf { padding-right: 60px; font-size: var(--font-size-sm); }
+.skill-subheading { font-weight: 550; }
+.skill-branch:last-child .skill-leaf { font-size: var(--font-size-sm); }
 .skill-tag-subheading { flex-basis: 100%; margin-top: 8px; }
 .skill-tag-subheading h4 { font-size: var(--font-size-sm); font-weight: 500; color: var(--muted-foreground); }
 

@@ -91,6 +91,10 @@
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
     --radius: 0.625rem;
+    --radius-tag: var(--radius-lg);
+    --tag-background: var(--secondary);
+    --tag-foreground: var(--secondary-foreground);
+    --tag-border: transparent;
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
     --sidebar-primary: var(--primary);
@@ -149,6 +153,13 @@
     }
 }
 @layer components {
+  /* Shared by Badge and the fixed-size skill-tree nodes. */
+  .tag-surface {
+    border-radius: var(--radius-tag);
+    border: 1px solid var(--tag-border);
+    background: var(--tag-background);
+    color: var(--tag-foreground);
+  }
   .site-shell { min-height: 100svh; }
   .site-footer-music a:hover { text-decoration: underline; }
   .site-footer-music { margin-top: 12px; font-size: 11px; color: var(--muted-foreground); }
@@ -216,6 +227,10 @@
   .hero-finale-backdrop i, .hero-finale-backdrop::after {
     corner-shape: round;
   }
+  .music-volume::-webkit-slider-runnable-track { corner-shape: squircle; }
+  .music-volume::-moz-range-track { corner-shape: squircle; }
+  .music-volume::-webkit-slider-thumb { corner-shape: round; }
+  .music-volume::-moz-range-thumb { corner-shape: round; }
   .hero-seek::-webkit-slider-thumb { corner-shape: round; }
   .hero-seek::-moz-range-thumb { corner-shape: round; }
 }

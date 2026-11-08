@@ -1,4 +1,5 @@
-import { type CSSProperties } from "react"
+import { type CSSProperties, useRef } from "react"
+import { useInView } from "motion/react"
 import { Popover } from "@base-ui/react/popover"
 import { Tooltip } from "@base-ui/react/tooltip"
 import { Badge } from "@/components/ui/badge"
@@ -53,7 +54,7 @@ const branches = [
   ] },
   { id: "infra", zh: "AI Infra", en: "AI Infrastructure", icon: Cpu, groups: [
     { zh: "", en: "", capability: capabilities[3], tags: [
-      ["模型量化与压缩", "Model quantization & compression"], ["推理算子优化", "Inference operator optimization"],
+      ["模型量化", "Model quantization"], ["推理算子优化", "Inference operator optimization"],
     ] },
   ] },
 ]
@@ -139,7 +140,7 @@ const modelEvaluationAbility = {
   },
 }
 const quantizationAbility = {
-  zh: "模型量化与压缩", en: "Model quantization & compression",
+  zh: "模型量化", en: "Model quantization",
   tags: ["PyTorch", "PTQ", "INT8", "INT4"],
   description: {
     zh: "正在学习模型量化与压缩，探索低精度表示如何降低模型存储与显存开销。关注压缩前后的精度变化，以及模型效果、推理速度和资源占用之间的权衡。",
@@ -165,13 +166,26 @@ const backendTechnologyGroups = [
   { zh: "文档与调试", en: "Documentation & testing", tags: ["Swagger", "Apifox", "Postman"] },
 ]
 
+function BeginnerLabel({ label, locale, className }: { label: string; locale: Locale; className?: string }) {
+  return <Tooltip.Provider delay={0}>
+    <Tooltip.Root>
+      <Tooltip.Trigger render={<span className={className} tabIndex={0} />}>{label}</Tooltip.Trigger>
+      <Tooltip.Portal>
+        <Tooltip.Positioner side="top" sideOffset={6}>
+          <Tooltip.Popup className="skill-learning-tip">{locale === "zh" ? "初学者" : "Beginner"}</Tooltip.Popup>
+        </Tooltip.Positioner>
+      </Tooltip.Portal>
+    </Tooltip.Root>
+  </Tooltip.Provider>
+}
+
 function LearningTechnology({ technology, locale }: { technology: string; locale: Locale }) {
   return <Tooltip.Provider delay={0}>
     <Tooltip.Root>
       <Tooltip.Trigger delay={0} render={<Badge variant="learning" size="compact" tabIndex={0} />}>{technology}</Tooltip.Trigger>
       <Tooltip.Portal>
         <Tooltip.Positioner side="top" sideOffset={6}>
-          <Tooltip.Popup className="skill-learning-tip">{locale === "zh" ? "努力学习中" : "Actively learning"}</Tooltip.Popup>
+          <Tooltip.Popup className="skill-learning-tip">{locale === "zh" ? "初学者" : "Beginner"}</Tooltip.Popup>
         </Tooltip.Positioner>
       </Tooltip.Portal>
     </Tooltip.Root>
@@ -253,11 +267,18 @@ function AbilityTechnologies({ ability, locale }: { ability: (typeof softwareAbi
 
 function SkillTag({ tag, capability, locale }: { tag: string; capability: (typeof capabilities)[number]; locale: Locale }) {
   const ability = [...softwareAbilities, dataMiningAbility, dataCleaningAbility, dataVisualizationAbility, modelDesignAbility, modelTrainingAbility, modelEvaluationAbility, ...infraAbilities].find(item => item[locale] === tag)
-  if (!ability && !skillDescriptionsEnabled) return <span className="skill-leaf skill-leaf-static">{tag}</span>
+  // Temporarily disable these detail cards; keep their content for re-enabling later.
+  const detailsDisabled = ability !== undefined && (
+    infraAbilities.includes(ability) || ability === modelTrainingAbility || ability === modelEvaluationAbility
+  )
+  if (ability && infraAbilities.includes(ability)) {
+    return <BeginnerLabel label={tag} locale={locale} className="tag-surface skill-leaf skill-leaf-static" />
+  }
+  if (detailsDisabled || (!ability && !skillDescriptionsEnabled)) return <span className="tag-surface skill-leaf skill-leaf-static">{tag}</span>
   const copy = capability[locale]
   return (
     <Popover.Root>
-      <Popover.Trigger className="skill-leaf" openOnHover delay={150} closeDelay={0}
+      <Popover.Trigger className="tag-surface skill-leaf" openOnHover delay={150} closeDelay={0}
         onClick={event => {
           if (window.matchMedia("(min-width: 768px) and (hover: hover)").matches) {
             event.preventBaseUIHandler()
@@ -292,6 +313,10 @@ function SkillTag({ tag, capability, locale }: { tag: string; capability: (typeo
 
 export function Capabilities({ locale }: { locale: Locale }) {
   const zh = locale === "zh"
+  const treeRef = useRef<HTMLDivElement>(null)
+  const treeVisible = useInView(treeRef, { amount: 0.15 })
+  // Branch top + first leaf offset + row spacing + final leaf height.
+  const treeHeight = 290 + 78 + (Math.max(...branches.map(branch => branchRows(branch, locale).length)) - 1) * 42 + 36
   return (
     <section className="capabilities" aria-labelledby="capabilities-heading">
       <header className="capabilities-intro">
@@ -300,7 +325,7 @@ export function Capabilities({ locale }: { locale: Locale }) {
       <div className="skill-mobile-tags">
         {branches.map(branch => (
           <div className="skill-tag-group" key={branch.id}>
-            <h3>{branch[locale]}{branch.id === "infra" && <small className="skill-learning">{zh ? "学习中" : "Learning"}</small>}</h3>
+            <h3>{branch.id === "infra" ? <BeginnerLabel label={branch[locale]} locale={locale} /> : branch[locale]}</h3>
             <ul>
               {branchRows(branch, locale).map(row => (
                 <li key={row.id} className={row.heading ? "skill-tag-subheading" : undefined}>
@@ -313,18 +338,25 @@ export function Capabilities({ locale }: { locale: Locale }) {
       </div>
       <p className="skill-tree-hint">{zh ? "左右滑动探索技能树" : "Swipe to explore the skill tree"}</p>
       <div className="skill-tree-scroll" tabIndex={0} role="region" aria-label={zh ? "交互技能树，可横向滚动" : "Interactive skill tree, horizontally scrollable"}>
-        <div className="skill-tree">
-          <svg className="skill-connections" viewBox="0 0 1160 940" aria-hidden="true">
+        <div className="skill-tree" ref={treeRef} data-visible={treeVisible} style={{ height: treeHeight }}>
+          <svg className="skill-connections" viewBox={`0 0 1160 ${treeHeight}`} aria-hidden="true">
             {branches.map((branch, index) => {
               const x = branchX(index)
               const tags = branchRows(branch, locale)
               return <g key={branch.id}>
                 <path className="skill-path"
                   d={`M 580 154 C 580 210 ${x} 230 ${x} 320`} />
+                <path className="skill-particle skill-particle-trunk" pathLength={1}
+                  style={{ "--particle-delay": `${index * 0.12}s` } as CSSProperties}
+                  d={`M 580 154 C 580 210 ${x} 230 ${x} 320`} />
                 {tags.map((tag, leafIndex) => {
                   const y = 386 + leafIndex * 42
-                  return <path className="skill-path" key={tag.id}
-                    d={`M ${x} 350 H ${x - 155} V ${y} H ${x - 130}`} />
+                  const path = `M ${x} 350 H ${x - 155} V ${y} H ${x - 130}`
+                  return <g key={tag.id}>
+                    <path className="skill-path" d={path} />
+                    <path className="skill-particle" pathLength={1} d={path}
+                      style={{ "--particle-delay": `${0.95 + index * 0.12 + leafIndex * 0.06}s` } as CSSProperties} />
+                  </g>
                 })}
               </g>
             })}
@@ -342,13 +374,12 @@ export function Capabilities({ locale }: { locale: Locale }) {
                 style={{ left: branchX(index) } as CSSProperties}>
                 <div className="skill-branch-heading">
                   <span className="skill-branch-icon"><Icon size={20} aria-hidden="true" /></span>
-                  <span>{title}</span>
-                  {branch.id === "infra" && <small className="skill-learning">{zh ? "学习中" : "Learning"}</small>}
+                  {branch.id === "infra" ? <BeginnerLabel label={title} locale={locale} /> : <span>{title}</span>}
                 </div>
                 <ul className="skill-leaves">
-                  {tags.map(({ id, tag, capability, heading, learning }, leafIndex) => (
+                  {tags.map(({ id, tag, capability, heading }, leafIndex) => (
                     <li key={id} style={{ top: 78 + leafIndex * 42 }}>
-                      {heading ? <span className="skill-leaf skill-subheading">{tag}</span> : <><SkillTag tag={tag} capability={capability} locale={locale} />{learning && <small className="skill-leaf-learning">{zh ? "学习中" : "Learning"}</small>}</>}
+                      {heading ? <span className="tag-surface skill-leaf skill-subheading">{tag}</span> : <SkillTag tag={tag} capability={capability} locale={locale} />}
                     </li>
                   ))}
                 </ul>
