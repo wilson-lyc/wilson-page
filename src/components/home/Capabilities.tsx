@@ -346,17 +346,13 @@ export function Capabilities({ locale }: { locale: Locale }) {
               return <g key={branch.id}>
                 <path className="skill-path"
                   d={`M 580 154 C 580 210 ${x} 230 ${x} 320`} />
-                <path className="skill-particle skill-particle-trunk" pathLength={1}
+                <path className="skill-particle" pathLength={1}
                   style={{ "--particle-delay": `${index * 0.12}s` } as CSSProperties}
                   d={`M 580 154 C 580 210 ${x} 230 ${x} 320`} />
                 {tags.map((tag, leafIndex) => {
                   const y = 386 + leafIndex * 42
                   const path = `M ${x} 350 H ${x - 155} V ${y} H ${x - 130}`
-                  return <g key={tag.id}>
-                    <path className="skill-path" d={path} />
-                    <path className="skill-particle" pathLength={1} d={path}
-                      style={{ "--particle-delay": `${0.95 + index * 0.12 + leafIndex * 0.06}s` } as CSSProperties} />
-                  </g>
+                  return <path key={tag.id} className="skill-path" d={path} />
                 })}
               </g>
             })}

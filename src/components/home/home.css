@@ -341,7 +341,7 @@
   .skill-particle {
     display: block;
     stroke-dasharray: .035 1;
-    stroke-dashoffset: .04;
+    stroke-dashoffset: -1;
     opacity: 0;
     filter: drop-shadow(0 0 3px var(--module-side));
     animation: skill-particle-flow 5s linear infinite;
@@ -350,11 +350,11 @@
   }
   .skill-tree[data-visible="true"] .skill-particle { animation-play-state: running; }
   @keyframes skill-particle-flow {
-    0% { stroke-dashoffset: .04; opacity: 0; }
+    0% { stroke-dashoffset: -1; opacity: 0; }
     2% { opacity: .9; }
     19% { opacity: .9; }
-    22% { stroke-dashoffset: -1; opacity: 0; }
-    100% { stroke-dashoffset: -1; opacity: 0; }
+    22% { stroke-dashoffset: .04; opacity: 0; }
+    100% { stroke-dashoffset: .04; opacity: 0; }
   }
 }
 .skill-core { position: absolute; left: 480px; top: 20px; width: 200px; text-align: center; }
