@@ -182,15 +182,13 @@
 .hero-slide[data-work="true"] .hero-headline { font-size: clamp(2rem, 4vw, 4rem); }
 .hero-selected-work { position: relative; isolation: isolate; margin-top: 36px; text-align: left; }
 .hero-work-label { font-size: var(--font-size-body); color: var(--muted-foreground); margin-bottom: 16px; }
-.hero-work-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.hero-work-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
 .hero-work-preview { display: grid; place-items: center; height: clamp(80px, 14svh, 150px); border-radius: 12px; background: color-mix(in srgb, var(--background) 65%, transparent); backdrop-filter: blur(12px); border: 1px solid color-mix(in srgb, var(--module-ink) 12%, transparent); color: var(--module-ink); }
-.hero-work-preview span { font-size: 3rem; font-weight: 450; }
 .hero-work-item h2 { margin-top: 16px; font-size: var(--font-size-lg); font-weight: 550; line-height: 1.3; }
 .hero-work-item p { margin-top: 6px; font-size: var(--font-size-body); color: var(--muted-foreground); line-height: 1.6; }
 @media (max-width: 767px) {
   .hero-work-grid { gap: 12px; }
   .hero-work-preview { height: 92px; }
-  .hero-work-preview span { font-size: 2rem; }
   .hero-work-item h2 { font-size: var(--font-size-md); }
 }
 
@@ -294,25 +292,32 @@
 .work { padding-bottom: clamp(72px, 10vw, 144px); }
 .work-intro > h2 { margin-bottom: 16px; }
 .work-intro > p { font-size: var(--font-size-body); color: var(--muted-foreground); }
-.work-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; margin-top: 40px; }
+.work-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin-top: 28px; }
 .work-example { min-width: 0; }
-.work-cover { position: relative; isolation: isolate; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--radius-xl); background: var(--module-face); color: var(--module-ink); }
-.work-cover-label { position: absolute; top: 20px; left: 20px; font-size: var(--font-size-sm); letter-spacing: .08em; }
-.work-cover-letter { position: absolute; inset: 0; display: grid; place-items: center; font-size: clamp(5rem, 10vw, 9rem); font-weight: 500; line-height: 1; letter-spacing: -.06em; }
-.work-cover-shape { position: absolute; z-index: -1; width: 65%; aspect-ratio: 1; top: 20%; left: 50%; border: 1px solid color-mix(in srgb, var(--module-ink) 25%, transparent); border-radius: 24px; transform: rotate(30deg); }
-.work-cover[data-work="B"] { background: var(--muted); color: var(--foreground); }
-.work-cover[data-work="B"] .work-cover-shape { left: -15%; top: 35%; transform: rotate(-20deg); }
-.work-cover[data-work="C"] { background: color-mix(in srgb, var(--module-side) 40%, var(--background)); }
-.work-cover[data-work="C"] .work-cover-shape { top: -30%; left: 20%; transform: rotate(45deg); }
-.work-type { font-size: var(--font-size-sm); color: var(--muted-foreground); margin-top: 24px; }
-.work-example h3 { font-size: var(--font-size-title); line-height: 1.35; letter-spacing: -.03em; font-weight: 550; margin-top: 8px; }
-.work-description { font-size: var(--font-size-body); color: var(--muted-foreground); line-height: 1.8; margin-top: 12px; }
-.work-tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin-top: 20px; }
-@media (max-width: 1023px) { .work-grid { gap: 24px; } }
-@media (max-width: 767px) {
-  .work-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
-  .work-cover-letter { font-size: 7rem; }
+.work-card { display: flex; flex-direction: column; height: 100%; border-radius: var(--radius-xl); }
+.work-card:focus-visible { outline: 2px solid var(--module-ink); outline-offset: 6px; }
+.work-cover { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: var(--radius-lg); background: var(--module-face); }
+.work-type { font-size: var(--font-size-xs); color: var(--muted-foreground); margin-top: 14px; }
+.work-example h3 { font-size: 1.25rem; line-height: 1.35; letter-spacing: -.03em; font-weight: 550; margin-top: 4px; }
+.work-description { font-size: var(--font-size-sm); color: var(--muted-foreground); line-height: 1.65; margin-top: 8px; margin-bottom: 14px; }
+/* Keep the layout fixed while giving pointer and keyboard users the same cue. */
+.work-card { transition: transform 240ms ease; }
+.work-cover { transition: box-shadow 240ms ease; }
+.work-cover img { transition: transform 420ms cubic-bezier(.2, .65, .3, 1); }
+.work-example h3 { transition: color 180ms ease; }
+.work-card:focus-visible h3 { color: var(--module-ink); }
+@media (hover: hover) and (pointer: fine) {
+  .work-card:hover { transform: translateY(-4px); }
+  .work-card:hover .work-cover { box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--module-ink) 40%, transparent); }
+  .work-card:hover .work-cover img { transform: scale(1.035); }
+  .work-card:hover h3 { color: var(--module-ink); }
 }
+.work-card:focus-visible .work-cover img { transform: scale(1.035); }
+@media (prefers-reduced-motion: reduce) {
+  .work-card, .work-card .work-cover img { transform: none !important; }
+}
+@media (max-width: 1023px) { .work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 24px; } .work-cover { max-height: 180px; } }
+@media (max-width: 479px) { .work-grid { gap: 24px 16px; } .work-type { line-height: 1.5; } .work-example h3 { font-size: 1rem; } }
 
 .capabilities { padding-bottom: clamp(72px, 10vw, 144px); }
 .capabilities-intro > h2 { margin-bottom: 16px; }
@@ -381,3 +386,7 @@
 .skill-platform-stack { min-width: 0; margin: 0; }
 .skill-platform-targets { margin-top: 8px; padding-left: 10px; border-left: 1px solid var(--border); }
 .skill-platform-caption { display: block; margin-bottom: 6px; font-size: 11px; color: var(--muted-foreground); }
+
+.work-cover img, .hero-work-preview img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.hero-work-preview { overflow: hidden; }
+@media (max-width: 767px) { .hero-work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .hero-work-item h2 { margin-top: 8px; } .hero-work-preview { height: 75px; } }
