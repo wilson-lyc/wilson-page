@@ -6,8 +6,8 @@ import {
   useScroll,
 } from "motion/react"
 import {
-  ArrowUpRightIcon,
   FolderIcon,
+  MailIcon,
   MenuIcon,
   MoonIcon,
   SunIcon,
@@ -30,7 +30,16 @@ import { Home } from "@/components/home/Home"
 import { BackgroundMusic, useBackgroundMusic } from "@/components/BackgroundMusic"
 import { cn } from "@/lib/utils"
 import publicSecurityIcon from "@/assets/images/ba.png"
+import { openContactEmail } from "@/lib/contact"
 import { githubProfile, siteSlogan } from "@/content/home"
+
+function GithubMark() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+        </svg>
+  )
+}
 
 type Page = "home" | "projects"
 const currentPage = (): Page =>
@@ -121,6 +130,26 @@ function Site() {
     }
   }, [entered])
 
+  useEffect(() => {
+    if (!menuOpen) return
+    const onPointerDown = (event: PointerEvent) => {
+      if (event.target instanceof Node && !headerRef.current?.contains(event.target)) {
+        setMenuOpen(false)
+      }
+    }
+    const onFocusIn = (event: FocusEvent) => {
+      if (event.target instanceof Node && !headerRef.current?.contains(event.target)) {
+        setMenuOpen(false)
+      }
+    }
+    document.addEventListener("pointerdown", onPointerDown)
+    document.addEventListener("focusin", onFocusIn)
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown)
+      document.removeEventListener("focusin", onFocusIn)
+    }
+  }, [menuOpen])
+
   const navigation = (mobile = false) => (
     <nav
       aria-label={t.navigation}
@@ -137,7 +166,6 @@ function Site() {
           className={cn("nav-link", mobile && "nav-link-mobile")}
         >
           <span>{t[item]}</span>
-          {mobile && <ArrowUpRightIcon className="size-4" aria-hidden="true" />}
         </a>
       ))}
     </nav>
@@ -145,6 +173,7 @@ function Site() {
 
   const preferences = (mobile = false) => (
     <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
       <div className="music-control">
         <Button
           variant="ghost"
@@ -177,9 +206,6 @@ function Site() {
           </div>
         </div>
       </div>
-      <div className="flex h-4" aria-hidden="true">
-        <Separator orientation="vertical" />
-      </div>
       <Button
         variant="ghost"
         size={mobile ? "default" : "sm"}
@@ -189,9 +215,6 @@ function Site() {
       >
         <span>{locale === "en" ? "中" : "EN"}</span>
       </Button>
-      <div className="flex h-4" aria-hidden="true">
-        <Separator orientation="vertical" />
-      </div>
       <Button
         variant="ghost"
         size={mobile ? "icon-lg" : "icon"}
@@ -205,6 +228,31 @@ function Site() {
           <MoonIcon aria-hidden="true" />
         )}
       </Button>
+      </div>
+      <div className="flex h-4" aria-hidden="true">
+        <Separator orientation="vertical" />
+      </div>
+      <div className="flex items-center gap-2">
+      <Button
+        variant="ghost"
+        size={mobile ? "icon-lg" : "icon"}
+        nativeButton={false}
+        render={<a href={githubProfile} target="_blank" rel="noopener noreferrer" />}
+        aria-label={t.githubProfile}
+        title={t.githubProfile}
+      >
+        <GithubMark />
+      </Button>
+      <Button
+        variant="ghost"
+        size={mobile ? "icon-lg" : "icon"}
+        aria-label={t.sendEmail}
+        title={t.sendEmail}
+        onClick={openContactEmail}
+      >
+        <MailIcon aria-hidden="true" />
+      </Button>
+      </div>
     </div>
   )
 
@@ -259,16 +307,26 @@ function Site() {
             )}
           </Button>
         </div>
-        <div id="mobile-menu" className="mobile-menu" hidden={!menuOpen}>
+        <motion.div
+          id="mobile-menu"
+          className="mobile-menu"
+          initial={false}
+          inert={!menuOpen}
+          aria-hidden={!menuOpen}
+          animate={{
+            opacity: menuOpen ? 1 : 0,
+            y: menuOpen || reducedMotion ? 0 : -8,
+            clipPath: menuOpen ? "inset(0% 0% 0% 0%)" : "inset(0% 0% 100% 0%)",
+          }}
+          transition={{ duration: reducedMotion ? 0 : menuOpen ? 0.24 : 0.18, ease: [0.22, 1, 0.36, 1] }}
+          style={{ pointerEvents: menuOpen ? "auto" : "none" }}
+        >
           {navigation(true)}
           <Separator />
-          <div className="flex items-center justify-between gap-4">
-            <span className="text-sm text-muted-foreground">
-              {t.preferences}
-            </span>
+          <div className="flex flex-wrap items-center justify-between gap-4">
             {preferences(true)}
           </div>
-        </div>
+        </motion.div>
       </header>
       <main
         id="main-content"
@@ -319,6 +377,14 @@ function Site() {
             <div className="site-footer-signature">
               <strong>Yongchao Lai<span aria-hidden="true">.</span></strong>
               <p>{siteSlogan[locale]}</p>
+            </div>
+            <div className="site-footer-contact-links">
+              <Button variant="ghost" size="icon-lg" nativeButton={false} className="site-footer-contact-link" aria-label={t.githubProfile} title={t.githubProfile} render={<a href={githubProfile} target="_blank" rel="noopener noreferrer" />}>
+                <GithubMark />
+              </Button>
+              <Button variant="ghost" size="icon-lg" className="site-footer-contact-link" aria-label={t.sendEmail} title={t.sendEmail} onClick={openContactEmail}>
+                <MailIcon aria-hidden="true" />
+              </Button>
             </div>
           </div>
           <div className="site-footer-bottom">
