@@ -3,7 +3,8 @@ import { ArrowDown, ArrowUpRight, Pause, Play } from "lucide-react"
 import { useReducedMotion } from "motion/react"
 import type { Locale } from "@/lib/i18n"
 import { projects } from "@/content/projects"
-import { githubProfile, siteSlogan } from "@/content/home"
+import { openContactEmail } from "@/lib/contact"
+import { siteSlogan } from "@/content/home"
 import welcomeGif from "@/assets/images/hero/welcome.gif"
 import gdufsLogo from "@/assets/images/hero/gdufs-logo-c.png"
 import gdufsLogoDark from "@/assets/images/hero/gdufs-logo-w.png"
@@ -237,9 +238,9 @@ export function Hero({ locale, started, onStart }: { locale: Locale; started: bo
         </div>
         {active === 4 && (
           <div className="hero-contact" style={{ ...fadeStyle(650), opacity: reveal(650) * (1 - leaving) }}>
-            <a className="solid-link" href={githubProfile} target="_blank" rel="noopener noreferrer">
-              {zh ? "联系我" : "Contact me"} <ArrowUpRight size={18} aria-hidden="true" />
-            </a>
+            <Button className="solid-link" type="button" onClick={openContactEmail}>
+              {zh ? "联系我" : "Contact me"} <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
+            </Button>
           </div>
         )}
       </div>
