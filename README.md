@@ -19,7 +19,7 @@ npm run dev
 
 ## 部署
 
-参见 [1Panel 手动部署步骤](./DEPLOYMENT.md)。
+支持推送到 `main` 后通过 GitHub Actions 自动构建并部署。配置说明及 1Panel 手动部署步骤见 [部署文档](./DEPLOYMENT.md)。
 
 ## 本地验证
 
