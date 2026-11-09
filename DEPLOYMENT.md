@@ -74,6 +74,12 @@ for key in /etc/ssh/ssh_host_*_key.pub; do ssh-keygen -lf "$key"; done
 
 确认一致后，将 `deploy_known_hosts` 中已核对的公钥记录填入 `DEPLOY_SSH_KNOWN_HOSTS`。非默认端口的记录通常以 `[example.com]:2222` 开头，保持原样。服务器更换主机密钥时，需要重新核对并更新此 Secret。
 
+## 查看部署进度与排查耗时
+
+在仓库 **Actions → Deploy → 对应运行 → deploy → Deploy dist over SSH** 展开实时日志。日志会分别显示 SSH 连接检查、资源上传、首页发布，并输出文件名、已处理字节数、百分比、速度、耗时及最终统计。内容校验相同的文件会跳过传输；百分比是 rsync 本次处理进度，实际网络发送量以最终统计为准。
+
+新 runner 的构建文件时间戳每次都会变化，因此部署使用内容校验跳过未改动的音乐、图片等文件。首次上传仍需传输全部产物，速度取决于 GitHub runner 到服务器的链路与服务器带宽。连续 120 秒没有传输数据会报错退出，SSH 无响应也会超时，避免一直没有反馈。若有数据持续缓慢传输，仍受工作流 15 分钟总时限约束。
+
 ## 服务器要求与更新行为
 
 - Linux 服务器已安装 `rsync`，SSH 服务可从 GitHub 托管 runner 访问。

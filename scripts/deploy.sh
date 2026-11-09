@@ -43,11 +43,27 @@ Host deploy-target
   BatchMode yes
   PasswordAuthentication no
   ConnectTimeout 15
+  ServerAliveInterval 15
+  ServerAliveCountMax 3
 CONFIG
 
 # Both machines need rsync. Keep old hashed assets for already-open pages.
+echo 'Checking SSH connection and remote rsync...'
 ssh -F "$ssh_dir/config" deploy-target "command -v rsync >/dev/null && mkdir -p -- '$DEPLOY_TARGET_DIR'"
 export RSYNC_RSH="ssh -F $ssh_dir/config"
-rsync -rz --delay-updates --exclude='/index.html' dist/ "deploy-target:$DEPLOY_TARGET_DIR/"
+
+# Build timestamps change on fresh runners. Compare contents to avoid uploading
+# unchanged media again. Convert carriage returns to lines for Actions live logs.
+upload() {
+  rsync -rzc --delay-updates --timeout=120 \
+    --info=progress2,name1 --stats --human-readable --outbuf=N "$@" \
+    | stdbuf -oL tr '\r' '\n'
+}
+
+echo 'Uploading assets (bytes / percent / speed / elapsed time)...'
+SECONDS=0
+upload --exclude='/index.html' dist/ "deploy-target:$DEPLOY_TARGET_DIR/"
+echo "Assets completed in ${SECONDS}s. Publishing index.html..."
 # Publish the entry point only after every asset has uploaded successfully.
-rsync -rz --delay-updates dist/index.html "deploy-target:$DEPLOY_TARGET_DIR/"
+upload dist/index.html "deploy-target:$DEPLOY_TARGET_DIR/"
+echo "Deployment completed in ${SECONDS}s."
